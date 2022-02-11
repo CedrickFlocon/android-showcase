@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("kotlin-android")
 }
 
@@ -11,6 +11,4 @@ android {
 }
 dependencies {
     implementation(libs.kotlin.stdlib)
-
-    implementation(project(":user:presentation"))
 }

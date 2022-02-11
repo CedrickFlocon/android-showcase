@@ -6,3 +6,5 @@ apply {
 }
 
 include(":app")
+
+include(":user:presentation")

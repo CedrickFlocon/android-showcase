@@ -1,4 +1,4 @@
-package com.cedrickflocon.android.showcase
+package com.cedrickflocon.android.showcase.user.presentation
 
 import android.app.Activity
 import android.os.Bundle

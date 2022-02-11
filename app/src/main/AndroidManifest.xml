@@ -5,7 +5,7 @@
     <application>
 
         <activity
-            android:name=".HelloWorldActivity"
+            android:name=".user.presentation.HelloWorldActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,5 +1,10 @@
 dependencyResolutionManagement {
     versionCatalogs {
+        create("app") {
+            version("compileSdk", "31")
+            version("minSdk", "25")
+        }
+
         create("libs") {
             version("kotlin", "1.6.10")
 
