@@ -13,6 +13,26 @@ dependencyResolutionManagement {
 
 
             alias("android-gradle-plugin").to("com.android.tools.build", "gradle").version("7.0.4")
+
+
+            version("compose-compiler", "1.1.0-rc03")
+            version("compose", "1.1.0-rc03")
+            version("activity", "1.3.1")
+            alias("compose-ui").to("androidx.compose.ui", "ui").versionRef("compose")
+            alias("compose-ui-tooling").to("androidx.compose.ui", "ui-tooling").versionRef("compose")
+            alias("compose-foundation").to("androidx.compose.foundation", "foundation").versionRef("compose")
+            alias("compose-material").to("androidx.compose.material", "material").versionRef("compose")
+            alias("activity-compose").to("androidx.activity", "activity-compose").versionRef("activity")
+            bundle(
+                "compose",
+                listOf(
+                    "compose-ui",
+                    "compose-ui-tooling",
+                    "compose-foundation",
+                    "compose-material",
+                    "activity-compose",
+                )
+            )
         }
     }
 }

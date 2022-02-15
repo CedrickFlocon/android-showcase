@@ -1,17 +1,17 @@
 package com.cedrickflocon.android.showcase.user.presentation
 
-import android.app.Activity
 import android.os.Bundle
-import android.widget.TextView
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.material.Text
 
-class HelloWorldActivity : Activity() {
+class HelloWorldActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val textView = TextView(baseContext).apply {
-            text = "Hello world"
+        setContent {
+            Text(text = "Hello World")
         }
-        setContentView(textView)
     }
 
 }
