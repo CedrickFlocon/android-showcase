@@ -7,4 +7,7 @@ apply {
 
 include(":app")
 
-include(":user:presentation")
+include(
+    ":user:domain",
+    ":user:presentation"
+)

@@ -14,6 +14,9 @@ dependencyResolutionManagement {
 
             alias("android-gradle-plugin").to("com.android.tools.build", "gradle").version("7.0.4")
 
+            version("arrow", "1.0.1")
+            alias("arrow-core").to("io.arrow-kt", "arrow-core").versionRef("arrow")
+
 
             version("compose-compiler", "1.1.0-rc03")
             version("compose", "1.1.0-rc03")
