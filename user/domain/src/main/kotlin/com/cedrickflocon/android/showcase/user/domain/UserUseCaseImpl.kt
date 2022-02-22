@@ -7,7 +7,7 @@ import java.net.URL
 class UserUseCaseImpl : UserUseCase {
 
     override suspend fun getUser(login: String): Either<UserError, User> {
-        return User(login, URL("")).right()
+        return User(login, URL("https://avatars.githubusercontent.com/u/7161169?s=96&v=4")).right()
     }
 
 }

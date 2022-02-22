@@ -36,6 +36,16 @@ dependencyResolutionManagement {
                     "activity-compose",
                 )
             )
+
+            version("kotest", "5.1.0")
+            alias("kotest").to("io.kotest", "kotest-runner-junit5").versionRef("kotest")
+
+            version("mockk", "1.12.2")
+            alias("mockk").to("io.mockk", "mockk").versionRef("mockk")
+
+            version("truth", "1.1.3")
+            alias("truth").to("com.google.truth", "truth").versionRef("truth")
+            alias("truth-extensions").to("com.google.truth.extensions", "truth-java8-extension").versionRef("truth")
         }
     }
 }
