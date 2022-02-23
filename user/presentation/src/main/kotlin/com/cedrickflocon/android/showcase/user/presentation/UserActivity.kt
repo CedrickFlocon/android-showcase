@@ -9,7 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import com.cedrickflocon.android.showcase.design.Theme
 
-class HelloWorldActivity : ComponentActivity() {
+class UserActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

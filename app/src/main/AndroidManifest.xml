@@ -5,7 +5,7 @@
     <application android:label="@string/app_label">
 
         <activity
-            android:name=".user.presentation.HelloWorldActivity"
+            android:name=".user.presentation.UserActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
