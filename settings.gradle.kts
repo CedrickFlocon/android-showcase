@@ -5,9 +5,12 @@ apply {
     from("gradle/catalog.gradle.kts")
 }
 
-include(":app")
+include(
+    ":app",
+    ":design",
+)
 
 include(
     ":user:domain",
-    ":user:presentation"
+    ":user:presentation",
 )
