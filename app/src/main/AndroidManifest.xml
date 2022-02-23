@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cedrickflocon.android.showcase">
 
-    <application>
+    <application android:label="@string/app_label">
 
         <activity
             android:name=".user.presentation.HelloWorldActivity"

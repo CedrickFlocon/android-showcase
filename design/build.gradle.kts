@@ -19,8 +19,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":design"))
-
     implementation(libs.kotlin.stdlib)
     implementation(libs.bundles.compose)
 }

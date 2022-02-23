@@ -3,14 +3,22 @@ package com.cedrickflocon.android.showcase.user.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
+import com.cedrickflocon.android.showcase.design.Theme
 
 class HelloWorldActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            Text(text = "Hello World")
+            Theme {
+                Surface(modifier = Modifier.fillMaxSize()) {
+                    Text(text = "Hello World")
+                }
+            }
         }
     }
 
