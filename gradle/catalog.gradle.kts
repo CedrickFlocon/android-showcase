@@ -25,7 +25,6 @@ dependencyResolutionManagement {
             alias("compose-ui").to("androidx.compose.ui", "ui").versionRef("compose")
             alias("compose-ui-tooling").to("androidx.compose.ui", "ui-tooling").versionRef("compose")
             alias("compose-foundation").to("androidx.compose.foundation", "foundation").versionRef("compose")
-            //alias("compose-material2").to("androidx.compose.material", "material").versionRef("compose")
             alias("compose-material3").to("androidx.compose.material3", "material3").versionRef("material3")
             alias("activity-compose").to("androidx.activity", "activity-compose").versionRef("activity")
             bundle(
@@ -34,7 +33,6 @@ dependencyResolutionManagement {
                     "compose-ui",
                     "compose-ui-tooling",
                     "compose-foundation",
-                    //"compose-material2",
                     "compose-material3",
                     "activity-compose",
                 )
