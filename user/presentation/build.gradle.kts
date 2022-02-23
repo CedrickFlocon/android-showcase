@@ -22,5 +22,6 @@ dependencies {
     implementation(project(":design"))
 
     implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.coroutine)
     implementation(libs.bundles.compose)
 }
