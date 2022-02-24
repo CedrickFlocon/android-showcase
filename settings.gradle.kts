@@ -11,6 +11,7 @@ include(
 )
 
 include(
+    ":user:data",
     ":user:domain",
     ":user:presentation",
 )
