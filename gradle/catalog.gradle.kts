@@ -19,6 +19,9 @@ dependencyResolutionManagement {
             version("arrow", "1.0.1")
             alias("arrow-core").to("io.arrow-kt", "arrow-core").versionRef("arrow")
 
+            version("apollo-graphql", "3.1.0")
+            plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
+            alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
 
             version("compose-compiler", "1.1.0-rc03")
             version("compose", "1.1.0-rc03")

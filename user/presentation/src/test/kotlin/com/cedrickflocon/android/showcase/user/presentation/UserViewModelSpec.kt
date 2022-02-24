@@ -12,7 +12,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import java.net.URL
+import java.net.URI
 
 class UserViewModelSpec : DescribeSpec({
     val useCase = mockk<UserUseCase>()
@@ -20,7 +20,7 @@ class UserViewModelSpec : DescribeSpec({
 
     describe("get user on success") {
         beforeTest {
-            coEvery { useCase.getUser("cedrickflocon") } returns User("cedrickflocon", URL("https://cedrickflocon.com")).right()
+            coEvery { useCase.getUser("cedrickflocon") } returns User("cedrickflocon", URI("https://cedrickflocon.com")).right()
         }
 
         it("should have loading & success") {
@@ -29,7 +29,7 @@ class UserViewModelSpec : DescribeSpec({
                 .containsExactlyElementsIn(
                     listOf(
                         UserViewModel.UiState.Loading,
-                        UserViewModel.UiState.Success("cedrickflocon", URL("https://cedrickflocon.com"))
+                        UserViewModel.UiState.Success("cedrickflocon", URI("https://cedrickflocon.com"))
                     )
                 )
         }
