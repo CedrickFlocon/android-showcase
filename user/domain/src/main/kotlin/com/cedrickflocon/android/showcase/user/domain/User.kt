@@ -1,13 +1,14 @@
 package com.cedrickflocon.android.showcase.user.domain
 
-import java.net.URL
+import java.net.URI
 
 data class User(
     val name: String,
-    val avatarUrl: URL
+    val avatarUrl: URI
 )
 
 
 sealed interface UserError {
+    object Network : UserError
     object UserNotFound : UserError
 }

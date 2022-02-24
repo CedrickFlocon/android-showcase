@@ -1,0 +1,6 @@
+query GetUser($login: String!){
+    user(login: $login) @nonnull {
+        name @nonnull
+        avatarUrl
+    }
+}

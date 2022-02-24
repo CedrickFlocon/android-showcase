@@ -2,7 +2,7 @@ package com.cedrickflocon.android.showcase.user.presentation
 
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
 import kotlinx.coroutines.flow.flow
-import java.net.URL
+import java.net.URI
 
 
 class UserViewModel(
@@ -21,7 +21,7 @@ class UserViewModel(
     sealed interface UiState {
         object Loading : UiState
         data class Error(val error: String) : UiState
-        data class Success(val name: String, val avatarUrl: URL) : UiState
+        data class Success(val name: String, val avatarUrl: URI) : UiState
     }
 
 }
