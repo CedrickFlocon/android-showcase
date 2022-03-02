@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    id("com.android.dynamic-feature")
     id("kotlin-android")
 }
 
@@ -25,6 +25,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":app"))
+
     implementation(project(":design"))
     implementation(project(":user:domain"))
 
@@ -32,6 +34,7 @@ dependencies {
     implementation(libs.kotlin.coroutine)
     implementation(libs.arrow.core)
     implementation(libs.bundles.compose)
+    implementation(libs.androidx.core)
 
     testImplementation(libs.kotest)
     testImplementation(libs.mockk)
