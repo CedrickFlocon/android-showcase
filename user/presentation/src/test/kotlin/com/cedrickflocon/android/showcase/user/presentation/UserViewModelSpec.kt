@@ -16,7 +16,7 @@ import java.net.URI
 
 class UserViewModelSpec : DescribeSpec({
     val useCase = mockk<UserUseCase>()
-    val viewModel = UserViewModel(useCase, "cedrickflocon")
+    val viewModel = UserViewModel(useCase, UserParams("cedrickflocon"))
 
     describe("get user on success") {
         beforeTest {

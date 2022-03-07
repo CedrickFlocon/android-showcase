@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cedrickflocon.android.showcase">
 
-    <application android:label="@string/app_label">
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".app.ShowcaseApplication"
+        android:label="@string/app_label">
 
         <activity
             android:name=".user.presentation.UserActivity"

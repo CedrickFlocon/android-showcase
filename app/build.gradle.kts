@@ -14,6 +14,8 @@ android {
     dynamicFeatures.add(":user:presentation")
 }
 dependencies {
+    implementation(project(":user:di"))
+
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core)

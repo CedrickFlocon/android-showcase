@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.cedrickflocon.android.showcase.design.Theme
-import com.cedrickflocon.android.showcase.user.domain.UserUseCaseImpl
+import com.cedrickflocon.android.showcase.user.di.UserComponent
 
 class UserActivity : ComponentActivity() {
 
@@ -21,7 +21,14 @@ class UserActivity : ComponentActivity() {
         setContent {
             Theme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    val dataSource = remember { UserViewModel(UserUseCaseImpl(), "Me") }
+                    val dataSource = remember {
+                        DaggerViewModelComponent
+                            .factory()
+                            .create(
+                                UserParams("asdfadsfasfesafed"),
+                                (application as UserComponent.Provider).provideComponent())
+                            .provideViewModel()
+                    }
                     val value = dataSource.data.collectAsState(initial = null).value
 
                     Column {
