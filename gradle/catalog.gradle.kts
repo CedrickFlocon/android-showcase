@@ -23,6 +23,11 @@ dependencyResolutionManagement {
             plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
             alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
 
+            version("dagger", "2.41")
+            alias("dagger").to("com.google.dagger", "dagger").versionRef("dagger")
+            alias("dagger-compiler").to("com.google.dagger", "dagger-compiler").versionRef("dagger")
+            alias("inject").to("javax.inject", "javax.inject").version("1")
+
             version("androidx-core", "1.7.0")
             alias("androidx-core").to("androidx.core", "core").versionRef("androidx-core")
 
