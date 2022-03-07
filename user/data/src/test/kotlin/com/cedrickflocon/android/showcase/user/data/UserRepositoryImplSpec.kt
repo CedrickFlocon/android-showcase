@@ -2,7 +2,6 @@ package com.cedrickflocon.android.showcase.user.data
 
 import arrow.core.left
 import arrow.core.right
-import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.exception.ApolloException
 import com.cedrickflocon.android.showcase.user.domain.User
 import com.cedrickflocon.android.showcase.user.domain.UserError
@@ -13,13 +12,13 @@ import io.mockk.mockk
 import java.net.URI
 
 class UserRepositoryImplSpec : DescribeSpec({
-    val client = mockk<ApolloClient>()
-    val repository = UserRepositoryImpl(client)
+    val graphQLClient = mockk<GraphQLClient>()
+    val repository = UserRepositoryImpl(graphQLClient)
 
     describe("get user on success") {
         beforeTest {
             coEvery {
-                client.query(GetUserQuery("cedrickflocon")).execute().dataAssertNoErrors.user
+                graphQLClient.client.query(GetUserQuery("cedrickflocon")).execute().dataAssertNoErrors.user
             } returns GetUserQuery.User("Cedrick", URI("http://cedrickflocon"))
         }
 
@@ -32,7 +31,7 @@ class UserRepositoryImplSpec : DescribeSpec({
 
     describe("get user on error") {
         beforeTest {
-            coEvery { client.query(GetUserQuery("cedrickflocon")) } throws ApolloException()
+            coEvery { graphQLClient.client.query(GetUserQuery("cedrickflocon")) } throws ApolloException()
         }
 
         it("return error") {

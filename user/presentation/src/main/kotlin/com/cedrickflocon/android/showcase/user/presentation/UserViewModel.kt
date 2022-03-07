@@ -3,16 +3,17 @@ package com.cedrickflocon.android.showcase.user.presentation
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
 import kotlinx.coroutines.flow.flow
 import java.net.URI
+import javax.inject.Inject
 
 
-class UserViewModel(
+class UserViewModel @Inject constructor(
     private val useCase: UserUseCase,
-    private val login: String
+    private val userParams: UserParams
 ) {
 
     val data = flow {
         this.emit(UiState.Loading)
-        useCase.getUser(login).fold(
+        useCase.getUser(userParams.login).fold(
             { this.emit(UiState.Error("error")) },
             { this.emit(UiState.Success(it.name, it.avatarUrl)) },
         )

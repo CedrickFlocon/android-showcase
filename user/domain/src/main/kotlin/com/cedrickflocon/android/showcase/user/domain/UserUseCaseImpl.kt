@@ -4,13 +4,14 @@ import arrow.core.Either
 import arrow.core.right
 import kotlinx.coroutines.delay
 import java.net.URI
-import java.net.URL
+import javax.inject.Inject
 
-class UserUseCaseImpl : UserUseCase {
+class UserUseCaseImpl @Inject constructor(
+    private val repository: UserRepository
+) : UserUseCase {
 
     override suspend fun getUser(login: String): Either<UserError, User> {
-        delay(5000)
-        return User(login, URI("https://avatars.githubusercontent.com/u/7161169?s=96&v=4")).right()
+        return repository.getUser(login)
     }
 
 }

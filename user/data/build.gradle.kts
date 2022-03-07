@@ -18,6 +18,8 @@ dependencies {
     implementation(libs.arrow.core)
     implementation(libs.kotlin.coroutine)
 
+    implementation(libs.inject)
+
     testImplementation(libs.kotest)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)

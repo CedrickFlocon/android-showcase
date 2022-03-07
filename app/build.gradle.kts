@@ -7,10 +7,16 @@ android {
     compileSdk = app.versions.compileSdk.get().toInt()
     defaultConfig {
         minSdk = app.versions.minSdk.get().toInt()
+        versionName = "1.0.0"
+        versionCode = 1
     }
+
+    dynamicFeatures.add(":user:presentation")
 }
 dependencies {
+    implementation(project(":user:di"))
+
     implementation(libs.kotlin.stdlib)
 
-    implementation(project(":user:presentation"))
+    implementation(libs.androidx.core)
 }
