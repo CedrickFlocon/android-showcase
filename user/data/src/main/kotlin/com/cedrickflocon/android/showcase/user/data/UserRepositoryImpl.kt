@@ -19,7 +19,17 @@ class UserRepositoryImpl @Inject constructor(
         } catch (e: ApolloException) {
             return UserError.Network.left()
         }
-        return response.dataAssertNoErrors.user.let { User(it.name, it.avatarUrl) }.right()
+
+        if (response.hasErrors()) {
+            if (response.errors?.any { it.nonStandardFields?.get("type") == "NOT_FOUND" } == true) {
+                return UserError.UserNotFound.left()
+            } else {
+                throw IllegalArgumentException()
+            }
+        }
+
+        val user = response.data?.user ?: throw IllegalArgumentException()
+        return User(user.login, user.avatarUrl).right()
     }
 
 }
