@@ -1,13 +1,26 @@
 package com.cedrickflocon.android.showcase.user.presentation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.cedrickflocon.android.showcase.user.R
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
@@ -29,17 +42,40 @@ fun UserScreen(state: UserViewModel.UiState?) {
 
 @Composable
 private fun UserProfile(state: UserViewModel.UiState.Success) {
-    Row(modifier = Modifier.fillMaxSize()) {
-        AsyncImage(
-            model = state.avatarUrl.toString(),
-            contentDescription = null,
-            modifier = Modifier
-                .width(50.dp)
-                .height(50.dp)
-                .clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(state.login)
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            AsyncImage(
+                model = state.avatarUrl.toString(),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(50.dp)
+                    .height(50.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
+                state.name?.let { Text(it, style = MaterialTheme.typography.headlineMedium) }
+                Text(state.login)
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+            Icon(imageVector = Icons.Outlined.Home, contentDescription = null)
+            state.company?.let { Text(state.company) }
+            Icon(imageVector = Icons.Outlined.LocationOn, contentDescription = null)
+            state.location?.let { Text(state.location) }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row {
+            Icon(imageVector = Icons.Outlined.Person, contentDescription = null)
+            Text(
+                stringResource(
+                    id = R.string.showcase_user_social_count,
+                    state.followersCount, state.followingCount
+                )
+            )
+        }
+
     }
 }
 

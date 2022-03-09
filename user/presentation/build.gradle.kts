@@ -18,6 +18,8 @@ android {
         kotlinCompilerExtensionVersion = presentation.versions.compose.compiler.get()
     }
 
+    resourcePrefix("showcase_user_")
+
     testOptions {
         unitTests.all {
             it.useJUnitPlatform()
