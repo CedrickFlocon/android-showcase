@@ -50,7 +50,10 @@ dependencyResolutionManagement {
                     "activity-compose",
                 )
             )
+        }
 
+
+        create("test") {
             version("kotest", "5.1.0")
             alias("kotest").to("io.kotest", "kotest-runner-junit5").versionRef("kotest")
 

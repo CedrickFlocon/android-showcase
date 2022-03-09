@@ -20,8 +20,8 @@ dependencies {
 
     implementation(libs.inject)
 
-    testImplementation(libs.kotest)
-    testImplementation(libs.mockk)
-    testImplementation(libs.truth)
-    testImplementation(libs.truth.extensions)
+    testImplementation(test.kotest)
+    testImplementation(test.mockk)
+    testImplementation(test.truth)
+    testImplementation(test.truth.extensions)
 }
