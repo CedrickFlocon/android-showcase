@@ -7,15 +7,16 @@ import javax.inject.Inject
 
 
 class UserViewModel @Inject constructor(
+    private val userParams: UserParams,
     private val useCase: UserUseCase,
-    private val userParams: UserParams
+    private val mapper: UiStateMapper,
 ) {
 
     val data = flow {
         this.emit(UiState.Loading)
         useCase.getUser(userParams.login).fold(
             { this.emit(UiState.Error("error")) },
-            { this.emit(UiState.Success(it.name, it.avatarUrl)) },
+            { this.emit(mapper(it)) },
         )
     }
 
