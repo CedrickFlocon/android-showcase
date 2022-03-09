@@ -11,13 +11,13 @@ import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import java.net.URI
 import java.util.*
 import com.apollographql.apollo3.api.Error as GraphqlError
 
 class UserRepositoryImplSpec : DescribeSpec({
     val graphqlClient = mockk<GraphQLClient>()
-    val repository = UserRepositoryImpl(graphqlClient)
+    val mapper = mockk<UserMapper>()
+    val repository = UserRepositoryImpl(graphqlClient, mapper)
 
     describe("get user") {
         val query = GetUserQuery("cedrickflocon")
@@ -32,11 +32,16 @@ class UserRepositoryImplSpec : DescribeSpec({
             }
 
             describe("success") {
-                beforeEach { every { data.user } returns GetUserQuery.User("Cedrick", URI("http://cedrickflocon")) }
+                val user = mockk<User>()
+                beforeEach {
+                    val gqlUser = mockk<GetUserQuery.User>()
+                    every { data.user } returns gqlUser
+                    every { mapper(gqlUser) } returns user
+                }
 
                 it("return user") {
                     assertThat(repository.getUser("cedrickflocon"))
-                        .isEqualTo(User("Cedrick", URI("http://cedrickflocon")).right())
+                        .isEqualTo(user.right())
                 }
             }
 
