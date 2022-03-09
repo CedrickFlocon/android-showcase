@@ -9,11 +9,31 @@ class UserMapperSpec : DescribeSpec({
     val mapper = UserMapper()
 
     describe("gql user") {
-        val gqlUser = GetUserQuery.User("Cedrick", URI("http://cedrickflocon"))
+        val gqlUser = GetUserQuery.User(
+            name = "Cedrick",
+            login = "CedrickFlocon",
+            avatarUrl = URI("http://cedrickflocon"),
+            company = "Best Company",
+            location = "Paris",
+            isHireable = true,
+            followers = GetUserQuery.Followers(832480),
+            following = GetUserQuery.Following(432879),
+        )
 
         it("can be transform to a user") {
             assertThat(mapper(gqlUser))
-                .isEqualTo(User("Cedrick", URI("http://cedrickflocon")))
+                .isEqualTo(
+                    User(
+                        name = "Cedrick",
+                        login = "CedrickFlocon",
+                        avatarUrl = URI("http://cedrickflocon"),
+                        company = "Best Company",
+                        location = "Paris",
+                        isHireable = true,
+                        followersCount = 832480,
+                        followingCount = 432879,
+                    )
+                )
         }
     }
 })

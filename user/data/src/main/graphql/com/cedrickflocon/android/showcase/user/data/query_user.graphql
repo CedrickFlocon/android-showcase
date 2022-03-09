@@ -1,6 +1,16 @@
-query GetUser($login: String!){
+query GetUser($login: String!) {
     user(login: $login) {
+        name
         login
         avatarUrl
+        company
+        location
+        isHireable
+        followers {
+            totalCount
+        }
+        following {
+            totalCount
+        }
     }
 }
