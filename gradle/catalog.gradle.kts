@@ -30,16 +30,22 @@ dependencyResolutionManagement {
 
             version("androidx-core", "1.7.0")
             alias("androidx-core").to("androidx.core", "core").versionRef("androidx-core")
+        }
 
+        create("presentation") {
             version("compose-compiler", "1.1.0-rc03")
+
             version("compose", "1.1.0-rc03")
             alias("compose-ui").to("androidx.compose.ui", "ui").versionRef("compose")
             alias("compose-ui-tooling").to("androidx.compose.ui", "ui-tooling").versionRef("compose")
             alias("compose-foundation").to("androidx.compose.foundation", "foundation").versionRef("compose")
+
             version("material3", "1.0.0-alpha05")
             alias("compose-material3").to("androidx.compose.material3", "material3").versionRef("material3")
+
             version("activity", "1.3.1")
             alias("activity-compose").to("androidx.activity", "activity-compose").versionRef("activity")
+
             bundle(
                 "compose",
                 listOf(
@@ -51,7 +57,6 @@ dependencyResolutionManagement {
                 )
             )
         }
-
 
         create("test") {
             version("kotest", "5.1.0")

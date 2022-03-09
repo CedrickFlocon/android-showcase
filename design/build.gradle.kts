@@ -14,11 +14,11 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = presentation.versions.compose.compiler.get()
     }
 }
 
 dependencies {
     implementation(libs.kotlin.stdlib)
-    implementation(libs.bundles.compose)
+    implementation(presentation.bundles.compose)
 }
