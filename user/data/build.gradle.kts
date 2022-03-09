@@ -1,6 +1,6 @@
 plugins {
     id("kotlin")
-    alias(libs.plugins.apollo.graphql.plugin)
+    alias(data.plugins.apollo.graphql.plugin)
 }
 
 apollo {
@@ -14,7 +14,7 @@ dependencies {
     implementation(project(":user:domain"))
 
     implementation(libs.kotlin.stdlib)
-    implementation(libs.apollo.graphql.runtime)
+    implementation(data.apollo.graphql.runtime)
     implementation(libs.arrow.core)
     implementation(libs.kotlin.coroutine)
 

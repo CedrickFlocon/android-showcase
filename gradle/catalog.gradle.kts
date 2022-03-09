@@ -19,10 +19,6 @@ dependencyResolutionManagement {
             version("arrow", "1.0.1")
             alias("arrow-core").to("io.arrow-kt", "arrow-core").versionRef("arrow")
 
-            version("apollo-graphql", "3.1.0")
-            plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
-            alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
-
             version("dagger", "2.41")
             alias("dagger").to("com.google.dagger", "dagger").versionRef("dagger")
             alias("dagger-compiler").to("com.google.dagger", "dagger-compiler").versionRef("dagger")
@@ -30,6 +26,12 @@ dependencyResolutionManagement {
 
             version("androidx-core", "1.7.0")
             alias("androidx-core").to("androidx.core", "core").versionRef("androidx-core")
+        }
+
+        create("data"){
+            version("apollo-graphql", "3.1.0")
+            plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
+            alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
         }
 
         create("presentation") {

@@ -13,7 +13,7 @@ dependencies {
     implementation(project(":user:domain"))
     implementation(project(":user:data"))
 
-    implementation(libs.apollo.graphql.runtime)
+    implementation(data.apollo.graphql.runtime)
 
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
