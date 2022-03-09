@@ -28,7 +28,7 @@ dependencyResolutionManagement {
             alias("androidx-core").to("androidx.core", "core").versionRef("androidx-core")
         }
 
-        create("data"){
+        create("data") {
             version("apollo-graphql", "3.1.0")
             plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
             alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
@@ -48,6 +48,9 @@ dependencyResolutionManagement {
             version("activity", "1.3.1")
             alias("activity-compose").to("androidx.activity", "activity-compose").versionRef("activity")
 
+            version("coil", "2.0.0-rc01")
+            alias("coil-compose").to("io.coil-kt", "coil-compose").versionRef("coil")
+
             bundle(
                 "compose",
                 listOf(
@@ -56,6 +59,7 @@ dependencyResolutionManagement {
                     "compose-foundation",
                     "compose-material3",
                     "activity-compose",
+                    "coil-compose"
                 )
             )
         }
