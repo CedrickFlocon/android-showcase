@@ -10,7 +10,8 @@ import com.cedrickflocon.android.showcase.user.domain.UserRepository
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val graphQLClient: GraphQLClient
+    private val graphQLClient: GraphQLClient,
+    private val mapper: UserMapper,
 ) : UserRepository {
 
     override suspend fun getUser(login: String): Either<UserError, User> {
@@ -29,7 +30,7 @@ class UserRepositoryImpl @Inject constructor(
         }
 
         val user = response.data?.user ?: throw IllegalArgumentException()
-        return User(user.login, user.avatarUrl).right()
+        return mapper(user).right()
     }
 
 }

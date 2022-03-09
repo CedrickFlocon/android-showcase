@@ -8,6 +8,7 @@ import com.cedrickflocon.android.showcase.user.domain.UserUseCase
 import com.google.common.truth.Truth.assertThat
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.take
@@ -16,11 +17,15 @@ import java.net.URI
 
 class UserViewModelSpec : DescribeSpec({
     val useCase = mockk<UserUseCase>()
-    val viewModel = UserViewModel(useCase, UserParams("cedrickflocon"))
+    val mapper = mockk<UiStateMapper>()
+    val viewModel = UserViewModel(UserParams("cedrickflocon"), useCase, mapper)
 
     describe("get user on success") {
+        val success = mockk<UserViewModel.UiState.Success>()
         beforeTest {
-            coEvery { useCase.getUser("cedrickflocon") } returns User("cedrickflocon", URI("https://cedrickflocon.com")).right()
+            val user = mockk<User>()
+            coEvery { useCase.getUser("cedrickflocon") } returns user.right()
+            every { mapper(user) } returns success
         }
 
         it("should have loading & success") {
@@ -29,7 +34,7 @@ class UserViewModelSpec : DescribeSpec({
                 .containsExactlyElementsIn(
                     listOf(
                         UserViewModel.UiState.Loading,
-                        UserViewModel.UiState.Success("cedrickflocon", URI("https://cedrickflocon.com"))
+                        success
                     )
                 )
         }
