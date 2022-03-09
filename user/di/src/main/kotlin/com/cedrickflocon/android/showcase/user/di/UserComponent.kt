@@ -5,6 +5,7 @@ import com.cedrickflocon.android.showcase.user.domain.UserRepository
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
 import com.cedrickflocon.android.showcase.user.domain.UserUseCaseImpl
 import dagger.Binds
+import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 
@@ -15,7 +16,9 @@ interface UserComponent {
 
     @Component.Factory
     interface Factory {
-        fun create(): UserComponent
+        fun create(
+            @BindsInstance bearer: String
+        ): UserComponent
     }
 
     @Module
