@@ -15,7 +15,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+        kotlinCompilerExtensionVersion = presentation.versions.compose.compiler.get()
     }
 
     testOptions {
@@ -35,15 +35,15 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutine)
     implementation(libs.arrow.core)
-    implementation(libs.bundles.compose)
+    implementation(presentation.bundles.compose)
     implementation(libs.androidx.core)
 
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
     implementation(libs.inject)
 
-    testImplementation(libs.kotest)
-    testImplementation(libs.mockk)
-    testImplementation(libs.truth)
-    testImplementation(libs.truth.extensions)
+    testImplementation(test.kotest)
+    testImplementation(test.mockk)
+    testImplementation(test.truth)
+    testImplementation(test.truth.extensions)
 }

@@ -19,10 +19,6 @@ dependencyResolutionManagement {
             version("arrow", "1.0.1")
             alias("arrow-core").to("io.arrow-kt", "arrow-core").versionRef("arrow")
 
-            version("apollo-graphql", "3.1.0")
-            plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
-            alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
-
             version("dagger", "2.41")
             alias("dagger").to("com.google.dagger", "dagger").versionRef("dagger")
             alias("dagger-compiler").to("com.google.dagger", "dagger-compiler").versionRef("dagger")
@@ -30,16 +26,31 @@ dependencyResolutionManagement {
 
             version("androidx-core", "1.7.0")
             alias("androidx-core").to("androidx.core", "core").versionRef("androidx-core")
+        }
 
+        create("data") {
+            version("apollo-graphql", "3.1.0")
+            plugin("apollo-graphql-plugin", "com.apollographql.apollo3").versionRef("apollo-graphql")
+            alias("apollo-graphql-runtime").to("com.apollographql.apollo3", "apollo-runtime").versionRef("apollo-graphql")
+        }
+
+        create("presentation") {
             version("compose-compiler", "1.1.0-rc03")
+
             version("compose", "1.1.0-rc03")
             alias("compose-ui").to("androidx.compose.ui", "ui").versionRef("compose")
             alias("compose-ui-tooling").to("androidx.compose.ui", "ui-tooling").versionRef("compose")
             alias("compose-foundation").to("androidx.compose.foundation", "foundation").versionRef("compose")
+
             version("material3", "1.0.0-alpha05")
             alias("compose-material3").to("androidx.compose.material3", "material3").versionRef("material3")
+
             version("activity", "1.3.1")
             alias("activity-compose").to("androidx.activity", "activity-compose").versionRef("activity")
+
+            version("coil", "2.0.0-rc01")
+            alias("coil-compose").to("io.coil-kt", "coil-compose").versionRef("coil")
+
             bundle(
                 "compose",
                 listOf(
@@ -48,9 +59,12 @@ dependencyResolutionManagement {
                     "compose-foundation",
                     "compose-material3",
                     "activity-compose",
+                    "coil-compose"
                 )
             )
+        }
 
+        create("test") {
             version("kotest", "5.1.0")
             alias("kotest").to("io.kotest", "kotest-runner-junit5").versionRef("kotest")
 

@@ -32,4 +32,5 @@ dependencies {
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core)
+    implementation(presentation.bundles.compose)
 }
