@@ -23,7 +23,16 @@ class UserViewModel @Inject constructor(
     sealed interface UiState {
         object Loading : UiState
         data class Error(val error: String) : UiState
-        data class Success(val login: String, val avatarUrl: URI) : UiState
+        data class Success(
+            val login: String,
+            val name: String?,
+            val avatarUrl: URI,
+            val company: String?,
+            val location: String?,
+            val isHireable: Boolean,
+            val followersCount: Int,
+            val followingCount: Int,
+        ) : UiState
     }
 
 }
