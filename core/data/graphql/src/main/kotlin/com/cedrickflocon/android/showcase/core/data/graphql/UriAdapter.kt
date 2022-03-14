@@ -1,4 +1,4 @@
-package com.cedrickflocon.android.showcase.user.data
+package com.cedrickflocon.android.showcase.core.data.graphql
 
 import com.apollographql.apollo3.api.Adapter
 import com.apollographql.apollo3.api.CustomScalarAdapters

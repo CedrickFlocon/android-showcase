@@ -4,19 +4,16 @@ plugins {
 }
 
 apollo {
-    packageName.set("com.cedrickflocon.android.showcase.user.data")
+    generateApolloMetadata.set(true)
+    packageName.set("com.cedrickflocon.android.showcase.core.data.graphql")
+    mapScalar("URI", "java.net.URI")
 }
 
 tasks.test { useJUnitPlatform() }
 
 dependencies {
-    implementation(project(":user:domain"))
-
     implementation(libs.kotlin.stdlib)
     implementation(data.apollo.graphql.runtime)
-    apolloMetadata(project(":core:data:graphql"))
-    implementation(project(":core:data:graphql"))
-    implementation(libs.arrow.core)
     implementation(libs.kotlin.coroutine)
 
     implementation(libs.inject)
