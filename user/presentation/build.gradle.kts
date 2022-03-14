@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.dynamic-feature")
+    id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
 }
@@ -34,8 +34,6 @@ kapt {
 }
 
 dependencies {
-    implementation(project(":app"))
-
     implementation(project(":design"))
     implementation(project(":user:domain"))
     implementation(project(":user:di"))

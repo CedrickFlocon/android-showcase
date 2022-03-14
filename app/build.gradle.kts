@@ -24,7 +24,7 @@ android {
         )
     }
 
-    dynamicFeatures.add(":user:presentation")
+    dynamicFeatures.add(":user")
 }
 dependencies {
     implementation(project(":core:di"))
