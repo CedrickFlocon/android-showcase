@@ -4,12 +4,16 @@ import com.cedrickflocon.android.showcase.user.data.UserRepositoryImpl
 import com.cedrickflocon.android.showcase.user.domain.UserRepository
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
 import com.cedrickflocon.android.showcase.user.domain.UserUseCaseImpl
+import com.cedrickflocon.showcase.di.DataComponent
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 
-@Component(modules = [UserComponent.UserModule::class])
+@Component(
+    dependencies = [DataComponent::class],
+    modules = [UserComponent.UserModule::class]
+)
 interface UserComponent {
 
     fun useCase(): UserUseCase
@@ -17,7 +21,7 @@ interface UserComponent {
     @Component.Factory
     interface Factory {
         fun create(
-            @BindsInstance bearer: String
+            dataComponent: DataComponent
         ): UserComponent
     }
 

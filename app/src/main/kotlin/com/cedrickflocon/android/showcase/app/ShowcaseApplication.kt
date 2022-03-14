@@ -9,12 +9,8 @@ class ShowcaseApplication :
     Application(),
     UserComponent.Provider {
 
-    private val userComponent: UserComponent by lazy {
-        DaggerUserComponent
-            .factory()
-            .create(BuildConfig.BEARER)
-    }
+    private val graph = Graph()
 
-    override fun provideComponent(): UserComponent = userComponent
+    override fun provideComponent(): UserComponent = graph.userComponent
 
 }

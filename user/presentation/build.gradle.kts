@@ -27,6 +27,12 @@ android {
     }
 }
 
+kapt {
+    arguments {
+        arg("dagger.validateTransitiveComponentDependencies", "DISABLED")
+    }
+}
+
 dependencies {
     implementation(project(":app"))
 
