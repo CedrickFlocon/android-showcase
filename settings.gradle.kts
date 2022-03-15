@@ -24,7 +24,9 @@ include(
 )
 
 include(
+    ":search",
     ":search:di",
     ":search:data",
     ":search:domain",
+    ":search:presentation",
 )
