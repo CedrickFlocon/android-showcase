@@ -4,9 +4,8 @@ import com.cedrickflocon.android.showcase.user.data.UserRepositoryImpl
 import com.cedrickflocon.android.showcase.user.domain.UserRepository
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
 import com.cedrickflocon.android.showcase.user.domain.UserUseCaseImpl
-import com.cedrickflocon.showcase.di.DataComponent
+import com.cedrickflocon.showcase.core.di.DataComponent
 import dagger.Binds
-import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 
@@ -37,7 +36,7 @@ interface UserComponent {
     }
 
     interface Provider {
-        fun provideComponent(): UserComponent
+        fun provideUserComponent(): UserComponent
     }
 
 }

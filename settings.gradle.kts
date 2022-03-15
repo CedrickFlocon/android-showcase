@@ -22,3 +22,9 @@ include(
     ":user:domain",
     ":user:presentation",
 )
+
+include(
+    ":search:di",
+    ":search:data",
+    ":search:domain",
+)

@@ -22,7 +22,7 @@ class UserActivity : ComponentActivity() {
                         .factory()
                         .create(
                             UserParams("CedrickFlocon"),
-                            (application as UserComponent.Provider).provideComponent()
+                            (application as UserComponent.Provider).provideUserComponent()
                         )
                         .provideViewModel()
                 }
