@@ -21,6 +21,7 @@ include(
     ":user:data",
     ":user:domain",
     ":user:presentation",
+    ":user:router",
 )
 
 include(

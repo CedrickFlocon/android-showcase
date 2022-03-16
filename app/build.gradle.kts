@@ -38,6 +38,8 @@ dependencies {
 
     implementation(project(":design"))
 
+    implementation(project(":user:router"))
+
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core)
