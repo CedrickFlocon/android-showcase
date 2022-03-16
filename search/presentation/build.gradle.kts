@@ -38,6 +38,8 @@ dependencies {
     implementation(project(":search:domain"))
     implementation(project(":search:di"))
 
+    implementation(project(":user:router"))
+
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutine)
     implementation(libs.arrow.core)

@@ -21,6 +21,7 @@ class SearchActivity : ComponentActivity() {
                     DaggerViewModelComponent
                         .factory()
                         .create(
+                            this,
                             (application as SearchComponent.Provider).provideSearchComponent()
                         )
                         .provideViewModel()
