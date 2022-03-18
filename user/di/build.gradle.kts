@@ -10,6 +10,9 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:data:graphql"))
+    implementation(project(":core:di"))
+
     implementation(project(":user:domain"))
     implementation(project(":user:data"))
 

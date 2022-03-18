@@ -11,8 +11,23 @@ include(
 )
 
 include(
+    ":core:data:graphql",
+    ":core:di",
+)
+
+include(
+    ":user",
     ":user:di",
     ":user:data",
     ":user:domain",
     ":user:presentation",
+    ":user:router",
+)
+
+include(
+    ":search",
+    ":search:di",
+    ":search:data",
+    ":search:domain",
+    ":search:presentation",
 )

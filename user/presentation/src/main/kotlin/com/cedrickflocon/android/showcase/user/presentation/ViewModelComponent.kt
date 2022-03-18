@@ -1,6 +1,7 @@
 package com.cedrickflocon.android.showcase.user.presentation
 
 import com.cedrickflocon.android.showcase.user.di.UserComponent
+import com.cedrickflocon.android.showcase.user.router.UserParams
 import dagger.BindsInstance
 import dagger.Component
 

@@ -24,10 +24,21 @@ android {
         )
     }
 
-    dynamicFeatures.add(":user:presentation")
+    dynamicFeatures.addAll(
+        listOf(
+            ":user",
+            ":search",
+        )
+    )
 }
 dependencies {
+    implementation(project(":core:di"))
     implementation(project(":user:di"))
+    implementation(project(":search:di"))
+
+    implementation(project(":design"))
+
+    implementation(project(":user:router"))
 
     implementation(libs.kotlin.stdlib)
 

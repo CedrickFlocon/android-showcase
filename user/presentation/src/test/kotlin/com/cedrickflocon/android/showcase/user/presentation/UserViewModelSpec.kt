@@ -5,6 +5,7 @@ import arrow.core.right
 import com.cedrickflocon.android.showcase.user.domain.User
 import com.cedrickflocon.android.showcase.user.domain.UserError
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
+import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.google.common.truth.Truth.assertThat
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.coEvery
@@ -13,7 +14,6 @@ import io.mockk.mockk
 import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
-import java.net.URI
 
 class UserViewModelSpec : DescribeSpec({
     val useCase = mockk<UserUseCase>()

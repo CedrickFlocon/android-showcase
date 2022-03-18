@@ -1,9 +1,9 @@
-package com.cedrickflocon.android.showcase.user.data
+package com.cedrickflocon.android.showcase.core.data.graphql
 
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.http.LoggingInterceptor
 import com.apollographql.apollo3.network.okHttpClient
-import com.cedrickflocon.android.showcase.user.data.type.URI
+import com.cedrickflocon.android.showcase.core.data.graphql.type.URI
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

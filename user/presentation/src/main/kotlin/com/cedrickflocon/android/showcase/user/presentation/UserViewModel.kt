@@ -1,6 +1,7 @@
 package com.cedrickflocon.android.showcase.user.presentation
 
 import com.cedrickflocon.android.showcase.user.domain.UserUseCase
+import com.cedrickflocon.android.showcase.user.router.UserParams
 import kotlinx.coroutines.flow.flow
 import java.net.URI
 import javax.inject.Inject

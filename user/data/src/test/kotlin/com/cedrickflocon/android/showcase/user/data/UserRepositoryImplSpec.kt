@@ -4,6 +4,7 @@ import arrow.core.left
 import arrow.core.right
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.exception.ApolloException
+import com.cedrickflocon.android.showcase.core.data.graphql.GraphQLClient
 import com.cedrickflocon.android.showcase.user.domain.User
 import com.cedrickflocon.android.showcase.user.domain.UserError
 import com.google.common.truth.Truth.assertThat

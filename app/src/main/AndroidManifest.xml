@@ -9,7 +9,7 @@
         android:label="@string/app_label">
 
         <activity
-            android:name=".user.presentation.UserActivity"
+            android:name=".search.presentation.SearchActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,6 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".user.presentation.UserActivity"
+            android:exported="true" />
 
     </application>
 

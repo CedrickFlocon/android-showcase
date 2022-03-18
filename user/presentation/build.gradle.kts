@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.dynamic-feature")
+    id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
 }
@@ -27,12 +27,17 @@ android {
     }
 }
 
-dependencies {
-    implementation(project(":app"))
+kapt {
+    arguments {
+        arg("dagger.validateTransitiveComponentDependencies", "DISABLED")
+    }
+}
 
+dependencies {
     implementation(project(":design"))
     implementation(project(":user:domain"))
     implementation(project(":user:di"))
+    implementation(project(":user:router"))
 
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.coroutine)

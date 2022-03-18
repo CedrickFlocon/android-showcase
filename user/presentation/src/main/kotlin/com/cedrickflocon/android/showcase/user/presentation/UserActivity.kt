@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.cedrickflocon.android.showcase.design.Theme
 import com.cedrickflocon.android.showcase.user.di.UserComponent
+import com.cedrickflocon.android.showcase.user.router.UserRouter
 
 class UserActivity : ComponentActivity() {
 
@@ -21,8 +22,8 @@ class UserActivity : ComponentActivity() {
                     DaggerViewModelComponent
                         .factory()
                         .create(
-                            UserParams("CedrickFlocon"),
-                            (application as UserComponent.Provider).provideComponent()
+                            UserRouter.readUserIntent(intent),
+                            (application as UserComponent.Provider).provideUserComponent()
                         )
                         .provideViewModel()
                 }
