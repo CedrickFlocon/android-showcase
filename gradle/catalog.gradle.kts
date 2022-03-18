@@ -42,6 +42,9 @@ dependencyResolutionManagement {
             alias("compose-ui-tooling").to("androidx.compose.ui", "ui-tooling").versionRef("compose")
             alias("compose-foundation").to("androidx.compose.foundation", "foundation").versionRef("compose")
 
+            version("material", "1.2.0-alpha05")
+            alias("compose-material").to("androidx.compose.material", "material").versionRef("material")
+
             version("material3", "1.0.0-alpha05")
             alias("compose-material3").to("androidx.compose.material3", "material3").versionRef("material3")
 
@@ -57,6 +60,7 @@ dependencyResolutionManagement {
                     "compose-ui",
                     "compose-ui-tooling",
                     "compose-foundation",
+                    "compose-material",
                     "compose-material3",
                     "activity-compose",
                     "coil-compose"
@@ -74,6 +78,9 @@ dependencyResolutionManagement {
             version("truth", "1.1.3")
             alias("truth").to("com.google.truth", "truth").versionRef("truth")
             alias("truth-extensions").to("com.google.truth.extensions", "truth-java8-extension").versionRef("truth")
+
+            version("turbine", "0.7.0")
+            alias("turbine").to("app.cash.turbine", "turbine").versionRef("turbine")
         }
     }
 }

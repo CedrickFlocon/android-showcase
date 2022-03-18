@@ -27,7 +27,7 @@ class SearchActivity : ComponentActivity() {
                         .provideViewModel()
                 }
 
-                val value = viewModel.data.collectAsState(initial = null).value
+                val value = viewModel.states.collectAsState(initial = viewModel.initialState).value
 
                 Surface(modifier = Modifier.fillMaxSize()) {
                     SearchScreen(value)

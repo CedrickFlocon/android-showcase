@@ -1,18 +1,15 @@
 package com.cedrickflocon.android.showcase.search.presentation
 
+import app.cash.turbine.test
 import arrow.core.left
 import arrow.core.right
 import com.cedrickflocon.android.showcase.search.domain.SearchError
 import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
-import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.cedrickflocon.android.showcase.user.router.UserRouter
 import com.google.common.truth.Truth.assertThat
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.*
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 
 class SearchViewModelSpec : DescribeSpec({
     val useCase = mockk<SearchUseCase>()
@@ -20,52 +17,76 @@ class SearchViewModelSpec : DescribeSpec({
     val router = mockk<UserRouter>(relaxUnitFun = true)
     val viewModel = SearchViewModel(useCase, mapper, router)
 
-    describe("search on success") {
-        val success = mockk<SearchViewModel.UiState.Success>()
-        val onClickItem = slot<(String) -> Unit>()
-        beforeEach {
-            val searchResult = mockk<SearchResult>()
-            coEvery { useCase.search("Cedrick") } returns searchResult.right()
-            every { mapper(searchResult, capture(onClickItem)) } returns success
+    describe("initial state") {
+        val initialState = viewModel.initialState
+
+        describe("initial state onSearch") {
+            initialState.onSearch("Never proceed")
+
+            it("should not call the use case") {
+                verify { useCase wasNot Called }
+            }
         }
+
+        it("should have an initial state") {
+            assertThat(initialState.loading).isFalse()
+            assertThat(initialState.error).isFalse()
+            assertThat(initialState.items).isNull()
+        }
+    }
+
+    it("should init states with initialState") {
+        viewModel.states.test {
+            val first = awaitItem()
+
+            assertThat(first.loading).isFalse()
+            assertThat(first.error).isFalse()
+            assertThat(first.items).isNull()
+
+            expectNoEvents()
+        }
+    }
+
+    describe("success search") {
+        val items = mockk<List<SearchViewModel.UiState.Item>>()
+        val searchResult = mockk<SearchResult>()
+        coEvery { useCase.search("bobby") } returns searchResult.right()
+        every { mapper(searchResult, any()) } returns items
 
         it("should have loading & success") {
-            assertThat(viewModel.data.count()).isEqualTo(2)
-            assertThat(viewModel.data.take(2).toList())
-                .containsExactlyElementsIn(
-                    listOf(
-                        SearchViewModel.UiState.Loading,
-                        success
-                    )
-                )
-        }
+            viewModel.states.test {
+                awaitItem().onSearch("bobby")
 
-        describe("click on item") {
-            beforeEach {
-                onClickItem.captured("UncleBob")
-            }
+                val loading = awaitItem()
+                assertThat(loading.loading).isTrue()
+                assertThat(loading.items).isNull()
+                assertThat(loading.error).isFalse()
 
-            it("should router to user") {
-                verify { router.navigateToUser(UserParams("UncleBob")) }
+                val success = awaitItem()
+                assertThat(success.loading).isFalse()
+                assertThat(success.items).isEqualTo(items)
+                assertThat(success.error).isFalse()
             }
         }
     }
 
-    describe("search on error") {
-        beforeTest {
-            coEvery { useCase.search("Cedrick") } returns SearchError.Network.left()
-        }
+    describe("error search") {
+        coEvery { useCase.search("bobby") } returns SearchError.Network.left()
 
-        it("should have loading & error") {
-            assertThat(viewModel.data.count()).isEqualTo(2)
-            assertThat(viewModel.data.take(2).toList())
-                .containsExactlyElementsIn(
-                    listOf(
-                        SearchViewModel.UiState.Loading,
-                        SearchViewModel.UiState.Error
-                    )
-                )
+        it("should have loading & success") {
+            viewModel.states.test {
+                awaitItem().onSearch("bobby")
+
+                val loading = awaitItem()
+                assertThat(loading.loading).isTrue()
+                assertThat(loading.items).isNull()
+                assertThat(loading.error).isFalse()
+
+                val error = awaitItem()
+                assertThat(error.loading).isFalse()
+                assertThat(error.items).isNull()
+                assertThat(error.error).isTrue()
+            }
         }
     }
-
 })

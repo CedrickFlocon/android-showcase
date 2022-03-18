@@ -4,20 +4,19 @@ import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
 import javax.inject.Inject
 
-class UiStateMapper @Inject constructor() : (SearchResult, (login: String) -> Unit) -> SearchViewModel.UiState.Success {
+class UiStateMapper @Inject constructor() : (SearchResult, (login: String) -> Unit) -> List<SearchViewModel.UiState.Item> {
 
-    override fun invoke(searchResult: SearchResult, onClick: (login: String) -> Unit): SearchViewModel.UiState.Success {
-        return SearchViewModel.UiState.Success(
-            searchResult.searchResultItem
-                .filterIsInstance<SearchResultItem.User>()
-                .map {
-                    SearchViewModel.UiState.Success.Item.User(
-                        email = it.email,
-                        login = it.login,
-                        avatarUrl = it.avatarUrl,
-                        onClickItem = { onClick(it.login) }
-                    )
-                })
+    override fun invoke(searchResult: SearchResult, onClick: (login: String) -> Unit): List<SearchViewModel.UiState.Item> {
+        return searchResult.searchResultItem
+            .filterIsInstance<SearchResultItem.User>()
+            .map {
+                SearchViewModel.UiState.Item.User(
+                    email = it.email,
+                    login = it.login,
+                    avatarUrl = it.avatarUrl,
+                    onClickItem = { onClick(it.login) }
+                )
+            }
     }
 
 }

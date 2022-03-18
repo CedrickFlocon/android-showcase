@@ -33,27 +33,27 @@ class UiStateMapperSpec : DescribeSpec({
         )
 
         describe("map") {
-            lateinit var success: SearchViewModel.UiState.Success
-            beforeEach { success = mapper(searchResult, onClick) }
+            lateinit var items: List<SearchViewModel.UiState.Item>
+            beforeEach { items = mapper(searchResult, onClick) }
 
             it("can be transform to a success") {
-                assertThat(success.items).hasSize(2)
+                assertThat(items).hasSize(2)
 
-                with(success.items[0] as SearchViewModel.UiState.Success.Item.User) {
+                with(items[0] as SearchViewModel.UiState.Item.User) {
                     assertThat(this.login).isEqualTo("UncleBob")
                     assertThat(this.email).isEqualTo("unclebob@showcase.com")
                     assertThat(this.avatarUrl).isEqualTo(URI("http://robert.cecil.martin.com"))
                 }
 
-                with(success.items[1] as SearchViewModel.UiState.Success.Item.User) {
+                with(items[1] as SearchViewModel.UiState.Item.User) {
                     assertThat(this.login).isEqualTo("Bobby")
                     assertThat(this.email).isEqualTo("bobby@showcase.com")
                     assertThat(this.avatarUrl).isEqualTo(URI("http://bobby.com"))
                 }
             }
 
-            success.items
-                .filterIsInstance<SearchViewModel.UiState.Success.Item.User>()
+            items
+                .filterIsInstance<SearchViewModel.UiState.Item.User>()
                 .forEach { item ->
                     describe("click on item ${item.login}") {
                         beforeEach { item.onClickItem() }

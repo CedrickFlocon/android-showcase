@@ -54,4 +54,5 @@ dependencies {
     testImplementation(test.mockk)
     testImplementation(test.truth)
     testImplementation(test.truth.extensions)
+    testImplementation(test.turbine)
 }
