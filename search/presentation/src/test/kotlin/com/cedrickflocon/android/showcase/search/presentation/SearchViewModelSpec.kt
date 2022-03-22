@@ -29,7 +29,6 @@ class SearchViewModelSpec : DescribeSpec({
         }
 
         it("should have an initial state") {
-            assertThat(initialState.loading).isFalse()
             assertThat(initialState.error).isFalse()
             assertThat(initialState.items).isNull()
         }
@@ -39,7 +38,6 @@ class SearchViewModelSpec : DescribeSpec({
         viewModel.states.test {
             val first = awaitItem()
 
-            assertThat(first.loading).isFalse()
             assertThat(first.error).isFalse()
             assertThat(first.items).isNull()
 
@@ -58,12 +56,15 @@ class SearchViewModelSpec : DescribeSpec({
                 awaitItem().onSearch("bobby")
 
                 val loading = awaitItem()
-                assertThat(loading.loading).isTrue()
-                assertThat(loading.items).isNull()
+                assertThat(loading.items).hasSize(3)
+                loading.items?.forEach {
+                    assertThat(it.loading).isTrue()
+                    assertThat(it.login.length).isIn(10..20)
+                    assertThat(it.email.length).isIn(10..20)
+                }
                 assertThat(loading.error).isFalse()
 
                 val success = awaitItem()
-                assertThat(success.loading).isFalse()
                 assertThat(success.items).isEqualTo(items)
                 assertThat(success.error).isFalse()
             }
@@ -78,12 +79,15 @@ class SearchViewModelSpec : DescribeSpec({
                 awaitItem().onSearch("bobby")
 
                 val loading = awaitItem()
-                assertThat(loading.loading).isTrue()
-                assertThat(loading.items).isNull()
+                assertThat(loading.items).hasSize(3)
+                loading.items?.forEach {
+                    assertThat(it.loading).isTrue()
+                    assertThat(it.login.length).isIn(10..20)
+                    assertThat(it.email.length).isIn(10..20)
+                }
                 assertThat(loading.error).isFalse()
 
                 val error = awaitItem()
-                assertThat(error.loading).isFalse()
                 assertThat(error.items).isNull()
                 assertThat(error.error).isTrue()
             }

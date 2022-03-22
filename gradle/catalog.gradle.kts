@@ -54,6 +54,9 @@ dependencyResolutionManagement {
             version("coil", "2.0.0-rc01")
             alias("coil-compose").to("io.coil-kt", "coil-compose").versionRef("coil")
 
+            version("accompanist", "0.24.4-alpha")
+            alias("accompanist-placeholder").to("com.google.accompanist", "accompanist-placeholder-material").versionRef("accompanist")
+
             bundle(
                 "compose",
                 listOf(
@@ -63,7 +66,8 @@ dependencyResolutionManagement {
                     "compose-material",
                     "compose-material3",
                     "activity-compose",
-                    "coil-compose"
+                    "coil-compose",
+                    "accompanist-placeholder"
                 )
             )
         }

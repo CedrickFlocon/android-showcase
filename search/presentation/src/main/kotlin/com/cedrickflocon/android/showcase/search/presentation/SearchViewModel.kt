@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import java.net.URI
 import javax.inject.Inject
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModel @Inject constructor(
@@ -19,9 +21,8 @@ class SearchViewModel @Inject constructor(
 ) {
 
     val initialState = UiState(
-        loading = false,
-        error = false,
-        items = null
+        items = null,
+        error = false
     ) { events.tryEmit(Event.OnSearch(it)) }
 
     private val events = MutableSharedFlow<Event>(extraBufferCapacity = 1)
@@ -36,11 +37,9 @@ class SearchViewModel @Inject constructor(
                         useCase.search(it.query).fold(
                             { emit(initialState.onError()) },
                             {
-                                emit(
-                                    initialState.onSuccess(mapper(it) { login ->
-                                        router.navigateToUser(UserParams(login))
-                                    })
-                                )
+                                emit(initialState.onSuccess(mapper(it) { login ->
+                                    router.navigateToUser(UserParams(login))
+                                }))
                             }
                         )
                     }
@@ -49,18 +48,24 @@ class SearchViewModel @Inject constructor(
         }
 
     private fun UiState.onLoading() = this.copy(
-        loading = true,
+        items = List(3) {
+            UiState.Item(
+                loading = true,
+                email = (0..Random.nextInt(10 until 20)).joinToString("") { " " },
+                login = (0..Random.nextInt(10 until 20)).joinToString("") { " " },
+                avatarUrl = URI(""),
+                onClickItem = {})
+        },
         error = false
     )
 
     private fun UiState.onSuccess(items: List<UiState.Item>) = this.copy(
-        loading = false,
-        error = false,
-        items = items
+        items = items,
+        error = false
     )
 
     private fun UiState.onError() = this.copy(
-        loading = false,
+        items = null,
         error = true,
     )
 
@@ -70,19 +75,17 @@ class SearchViewModel @Inject constructor(
     }
 
     data class UiState(
-        val loading: Boolean,
-        val error: Boolean,
         val items: List<Item>?,
+        val error: Boolean,
         val onSearch: (String) -> Unit
     ) {
-        sealed interface Item {
-            data class User(
-                val email: String,
-                val login: String,
-                val avatarUrl: URI,
-                val onClickItem: () -> Unit,
-            ) : Item
-        }
+        data class Item(
+            val loading: Boolean,
+            val email: String,
+            val login: String,
+            val avatarUrl: URI,
+            val onClickItem: () -> Unit,
+        )
     }
 
 }

@@ -39,30 +39,30 @@ class UiStateMapperSpec : DescribeSpec({
             it("can be transform to a success") {
                 assertThat(items).hasSize(2)
 
-                with(items[0] as SearchViewModel.UiState.Item.User) {
-                    assertThat(this.login).isEqualTo("UncleBob")
+                with(items[0]) {
+                    assertThat(this.loading).isEqualTo(false)
                     assertThat(this.email).isEqualTo("unclebob@showcase.com")
+                    assertThat(this.login).isEqualTo("UncleBob")
                     assertThat(this.avatarUrl).isEqualTo(URI("http://robert.cecil.martin.com"))
                 }
 
-                with(items[1] as SearchViewModel.UiState.Item.User) {
-                    assertThat(this.login).isEqualTo("Bobby")
+                with(items[1]) {
+                    assertThat(this.loading).isEqualTo(false)
                     assertThat(this.email).isEqualTo("bobby@showcase.com")
+                    assertThat(this.login).isEqualTo("Bobby")
                     assertThat(this.avatarUrl).isEqualTo(URI("http://bobby.com"))
                 }
             }
 
-            items
-                .filterIsInstance<SearchViewModel.UiState.Item.User>()
-                .forEach { item ->
-                    describe("click on item ${item.login}") {
-                        beforeEach { item.onClickItem() }
+            items.forEach { item ->
+                describe("click on item ${item.login}") {
+                    beforeEach { item.onClickItem() }
 
-                        it("should call onclick") {
-                            verify { onClick(item.login) }
-                        }
+                    it("should call onclick") {
+                        verify { onClick(item.login) }
                     }
                 }
+            }
         }
     }
 })

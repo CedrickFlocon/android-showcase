@@ -10,7 +10,8 @@ class UiStateMapper @Inject constructor() : (SearchResult, (login: String) -> Un
         return searchResult.searchResultItem
             .filterIsInstance<SearchResultItem.User>()
             .map {
-                SearchViewModel.UiState.Item.User(
+                SearchViewModel.UiState.Item(
+                    loading = false,
                     email = it.email,
                     login = it.login,
                     avatarUrl = it.avatarUrl,
