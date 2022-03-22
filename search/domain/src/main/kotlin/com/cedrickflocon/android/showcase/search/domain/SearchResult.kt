@@ -3,7 +3,12 @@ package com.cedrickflocon.android.showcase.search.domain
 import java.net.URI
 
 data class SearchResult(
-    val searchResultItem: List<SearchResultItem>
+    val searchResultItem: List<SearchResultItem>,
+    val pageInfo: PageInfo,
+)
+
+data class PageInfo(
+    val nextCursor: String?,
 )
 
 sealed interface SearchResultItem {

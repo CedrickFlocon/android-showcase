@@ -29,7 +29,8 @@ class UiStateMapperSpec : DescribeSpec({
                     null,
                     URI("http://bobby.com")
                 ),
-            )
+            ),
+            mockk()
         )
 
         describe("map") {

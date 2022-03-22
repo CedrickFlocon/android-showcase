@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import arrow.core.left
 import arrow.core.right
 import com.cedrickflocon.android.showcase.search.domain.SearchError
+import com.cedrickflocon.android.showcase.search.domain.SearchParams
 import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
 import com.cedrickflocon.android.showcase.user.router.UserRouter
@@ -48,7 +49,7 @@ class SearchViewModelSpec : DescribeSpec({
     describe("success search") {
         val items = mockk<List<SearchViewModel.UiState.Item>>()
         val searchResult = mockk<SearchResult>()
-        coEvery { useCase.search("bobby") } returns searchResult.right()
+        coEvery { useCase.search(SearchParams("bobby", null)) } returns searchResult.right()
         every { mapper(searchResult, any()) } returns items
 
         it("should have loading & success") {
@@ -72,7 +73,7 @@ class SearchViewModelSpec : DescribeSpec({
     }
 
     describe("error search") {
-        coEvery { useCase.search("bobby") } returns SearchError.Network.left()
+        coEvery { useCase.search(SearchParams("bobby", null)) } returns SearchError.Network.left()
 
         it("should have loading & success") {
             viewModel.states.test {

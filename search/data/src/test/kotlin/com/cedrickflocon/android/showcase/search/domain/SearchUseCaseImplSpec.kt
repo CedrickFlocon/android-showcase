@@ -12,10 +12,11 @@ class SearchUseCaseImplSpec : DescribeSpec({
 
     describe("search") {
         val search = mockk<Either<SearchError, SearchResult>>()
-        beforeEach { coEvery { repository.search("Robert Cecil Martin") } returns search }
+        beforeEach { coEvery { repository.search(SearchParams("Robert Cecil Martin", "Y3Vyc29yOjEw")) } returns search }
 
         it("should return the given search") {
-            assertThat(useCase.search("Robert Cecil Martin")).isEqualTo(search)
+            assertThat(useCase.search(SearchParams("Robert Cecil Martin", "Y3Vyc29yOjEw")))
+                .isEqualTo(search)
         }
     }
 

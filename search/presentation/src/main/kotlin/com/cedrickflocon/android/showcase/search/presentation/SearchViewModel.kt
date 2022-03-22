@@ -1,5 +1,6 @@
 package com.cedrickflocon.android.showcase.search.presentation
 
+import com.cedrickflocon.android.showcase.search.domain.SearchParams
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
 import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.cedrickflocon.android.showcase.user.router.UserRouter
@@ -34,7 +35,7 @@ class SearchViewModel @Inject constructor(
                     Event.OnOpen -> emit(initialState)
                     is Event.OnSearch -> {
                         emit(initialState.onLoading())
-                        useCase.search(it.query).fold(
+                        useCase.search(SearchParams(it.query, null)).fold(
                             { emit(initialState.onError()) },
                             {
                                 emit(initialState.onSuccess(mapper(it) { login ->
