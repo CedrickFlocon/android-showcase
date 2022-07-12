@@ -1,7 +1,7 @@
 dependencyResolutionManagement {
     versionCatalogs {
         create("app") {
-            version("compileSdk", "31")
+            version("compileSdk", "32")
             version("minSdk", "25")
         }
 
@@ -14,12 +14,12 @@ dependencyResolutionManagement {
             version("kotlin-coroutine", "1.6.0")
             alias("kotlin-coroutine").to("org.jetbrains.kotlinx", "kotlinx-coroutines-core").versionRef("kotlin-coroutine")
 
-            alias("android-gradle-plugin").to("com.android.tools.build", "gradle").version("7.0.4")
+            alias("android-gradle-plugin").to("com.android.tools.build", "gradle").version("7.2.0")
 
             version("arrow", "1.0.1")
             alias("arrow-core").to("io.arrow-kt", "arrow-core").versionRef("arrow")
 
-            version("dagger", "2.41")
+            version("dagger", "2.42")
             alias("dagger").to("com.google.dagger", "dagger").versionRef("dagger")
             alias("dagger-compiler").to("com.google.dagger", "dagger-compiler").versionRef("dagger")
             alias("inject").to("javax.inject", "javax.inject").version("1")
@@ -69,17 +69,17 @@ dependencyResolutionManagement {
         }
 
         create("test") {
-            version("kotest", "5.1.0")
+            version("kotest", "5.3.2")
             alias("kotest").to("io.kotest", "kotest-runner-junit5").versionRef("kotest")
 
-            version("mockk", "1.12.2")
+            version("mockk", "1.12.4")
             alias("mockk").to("io.mockk", "mockk").versionRef("mockk")
 
             version("truth", "1.1.3")
             alias("truth").to("com.google.truth", "truth").versionRef("truth")
             alias("truth-extensions").to("com.google.truth.extensions", "truth-java8-extension").versionRef("truth")
 
-            version("turbine", "0.7.0")
+            version("turbine", "0.8.0")
             alias("turbine").to("app.cash.turbine", "turbine").versionRef("turbine")
         }
     }
