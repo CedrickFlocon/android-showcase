@@ -3,8 +3,8 @@ package com.cedrickflocon.android.showcase.search.presentation
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,17 +37,17 @@ fun UserItem(user: SearchViewModel.UiState.Item) {
             model = user.avatarUrl.toString(),
             contentDescription = null,
             modifier = Modifier
-                .loading(user)
                 .width(50.dp)
                 .height(50.dp)
                 .clip(CircleShape)
+                .loading(user)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
             Text(
                 text = user.login,
                 modifier = Modifier.loading(user),
-                style = MaterialTheme.typography.headlineMedium,
+                style = MaterialTheme.typography.body1,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

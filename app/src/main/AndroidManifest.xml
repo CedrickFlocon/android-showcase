@@ -6,6 +6,7 @@
 
     <application
         android:name=".app.ShowcaseApplication"
+        android:theme="@android:style/Theme.Material.NoActionBar"
         android:label="@string/app_label">
 
         <activity

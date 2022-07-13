@@ -42,11 +42,8 @@ dependencyResolutionManagement {
             alias("compose-ui-tooling").to("androidx.compose.ui", "ui-tooling").versionRef("compose")
             alias("compose-foundation").to("androidx.compose.foundation", "foundation").versionRef("compose")
 
-            version("material", "1.2.0-alpha05")
+            version("material", "1.3.0-alpha01")
             alias("compose-material").to("androidx.compose.material", "material").versionRef("material")
-
-            version("material3", "1.0.0-alpha05")
-            alias("compose-material3").to("androidx.compose.material3", "material3").versionRef("material3")
 
             version("activity", "1.3.1")
             alias("activity-compose").to("androidx.activity", "activity-compose").versionRef("activity")
@@ -64,7 +61,6 @@ dependencyResolutionManagement {
                     "compose-ui-tooling",
                     "compose-foundation",
                     "compose-material",
-                    "compose-material3",
                     "activity-compose",
                     "coil-compose",
                     "accompanist-placeholder"
