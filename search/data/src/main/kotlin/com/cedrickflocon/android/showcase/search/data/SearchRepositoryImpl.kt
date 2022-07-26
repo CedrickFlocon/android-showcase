@@ -18,12 +18,12 @@ class SearchRepositoryImpl @Inject constructor(
     private val mapper: SearchMapper,
 ) : SearchRepository {
 
-    override suspend fun search(searchParams: SearchParams): Either<SearchError, SearchResult> {
+    override suspend fun search(searchParams: SearchParams, cursor: String?): Either<SearchError, SearchResult> {
         val response = try {
             graphQLClient.client.query(
                 SearchQuery(
                     searchParams.query,
-                    Optional.presentIfNotNull(searchParams.cursor)
+                    Optional.presentIfNotNull(cursor)
                 )
             ).execute()
         } catch (e: ApolloException) {

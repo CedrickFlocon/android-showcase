@@ -9,8 +9,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.cedrickflocon.android.showcase.design.Theme
+import com.cedrickflocon.android.showcase.user.di.DaggerUserComponent
 import com.cedrickflocon.android.showcase.user.di.UserComponent
 import com.cedrickflocon.android.showcase.user.router.UserRouter
+import com.cedrickflocon.showcase.core.di.DataComponent
 
 class UserActivity : ComponentActivity() {
 
@@ -19,11 +21,15 @@ class UserActivity : ComponentActivity() {
         setContent {
             Theme {
                 val viewModel = remember {
+                    val userComponent: UserComponent = DaggerUserComponent
+                        .factory()
+                        .create((application as DataComponent.Provider).provideDataComponent())
+
                     DaggerViewModelComponent
                         .factory()
                         .create(
                             UserRouter.readUserIntent(intent),
-                            (application as UserComponent.Provider).provideUserComponent()
+                            userComponent
                         )
                         .provideViewModel()
                 }

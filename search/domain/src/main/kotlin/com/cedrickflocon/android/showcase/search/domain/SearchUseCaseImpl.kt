@@ -7,8 +7,8 @@ class SearchUseCaseImpl @Inject constructor(
     private val repository: SearchRepository
 ) : SearchUseCase {
 
-    override suspend fun search(searchParams: SearchParams): Either<SearchError, SearchResult> {
-        return repository.search(searchParams)
+    override suspend fun search(searchParams: SearchParams, cursor: String?): Either<SearchError, SearchResult> {
+        return repository.search(searchParams, cursor)
     }
 
 }

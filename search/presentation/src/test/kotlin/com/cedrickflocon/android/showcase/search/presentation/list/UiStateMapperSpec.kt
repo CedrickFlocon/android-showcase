@@ -1,8 +1,8 @@
-package com.cedrickflocon.android.showcase.search.presentation
+package com.cedrickflocon.android.showcase.search.presentation.list
 
 import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
-import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.mockk
 import io.mockk.verify
@@ -34,24 +34,24 @@ class UiStateMapperSpec : DescribeSpec({
         )
 
         describe("map") {
-            lateinit var items: List<SearchViewModel.UiState.Item>
+            lateinit var items: List<SearchListViewModel.UiState.Item>
             beforeEach { items = mapper(searchResult, onClick) }
 
             it("can be transform to a success") {
-                assertThat(items).hasSize(2)
+                Truth.assertThat(items).hasSize(2)
 
                 with(items[0]) {
-                    assertThat(this.loading).isEqualTo(false)
-                    assertThat(this.email).isEqualTo("unclebob@showcase.com")
-                    assertThat(this.login).isEqualTo("UncleBob")
-                    assertThat(this.avatarUrl).isEqualTo(URI("http://robert.cecil.martin.com"))
+                    Truth.assertThat(this.loading).isEqualTo(false)
+                    Truth.assertThat(this.email).isEqualTo("unclebob@showcase.com")
+                    Truth.assertThat(this.login).isEqualTo("UncleBob")
+                    Truth.assertThat(this.avatarUrl).isEqualTo(URI("http://robert.cecil.martin.com"))
                 }
 
                 with(items[1]) {
-                    assertThat(this.loading).isEqualTo(false)
-                    assertThat(this.email).isEqualTo("bobby@showcase.com")
-                    assertThat(this.login).isEqualTo("Bobby")
-                    assertThat(this.avatarUrl).isEqualTo(URI("http://bobby.com"))
+                    Truth.assertThat(this.loading).isEqualTo(false)
+                    Truth.assertThat(this.email).isEqualTo("bobby@showcase.com")
+                    Truth.assertThat(this.login).isEqualTo("Bobby")
+                    Truth.assertThat(this.avatarUrl).isEqualTo(URI("http://bobby.com"))
                 }
             }
 

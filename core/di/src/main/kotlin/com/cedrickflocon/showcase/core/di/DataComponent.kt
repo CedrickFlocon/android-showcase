@@ -3,6 +3,7 @@ package com.cedrickflocon.showcase.core.di
 import com.cedrickflocon.android.showcase.core.data.graphql.GraphQLClient
 import dagger.BindsInstance
 import dagger.Component
+import javax.inject.Singleton
 
 @Component
 interface DataComponent {
@@ -16,4 +17,7 @@ interface DataComponent {
         ): DataComponent
     }
 
+    interface Provider {
+        fun provideDataComponent(): DataComponent
+    }
 }

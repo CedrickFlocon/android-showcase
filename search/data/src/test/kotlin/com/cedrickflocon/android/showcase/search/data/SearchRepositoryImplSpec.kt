@@ -24,7 +24,8 @@ class SearchRepositoryImplSpec : DescribeSpec({
 
     describe("search query") {
         val query = SearchQuery("Robert Cecil Martin", Optional.presentIfNotNull("Y3Vyc29yOjEw"))
-        val searchParams = SearchParams("Robert Cecil Martin", "Y3Vyc29yOjEw")
+        val searchParams = SearchParams("Robert Cecil Martin")
+        val cursor = "Y3Vyc29yOjEw"
 
         describe("data") {
             val searchResult = mockk<SearchResult>()
@@ -42,7 +43,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
             }
 
             it("return search result") {
-                assertThat(repository.search(searchParams)).isEqualTo(searchResult.right())
+                assertThat(repository.search(searchParams, cursor)).isEqualTo(searchResult.right())
             }
         }
 
@@ -54,7 +55,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
             }
 
             it("return search result") {
-                assertThat(runCatching { repository.search(searchParams) }.exceptionOrNull())
+                assertThat(runCatching { repository.search(searchParams, cursor) }.exceptionOrNull())
                     .isInstanceOf(IllegalStateException::class.java)
             }
         }
@@ -66,7 +67,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
                 }
 
                 it("return network error") {
-                    assertThat(repository.search(searchParams))
+                    assertThat(repository.search(searchParams, cursor))
                         .isEqualTo(SearchError.Network.left())
                 }
             }
@@ -78,7 +79,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
                 }
 
                 it("should throw exception") {
-                    assertThat(runCatching { repository.search(searchParams) }.exceptionOrNull())
+                    assertThat(runCatching { repository.search(searchParams, cursor) }.exceptionOrNull())
                         .isEqualTo(exception)
                 }
             }

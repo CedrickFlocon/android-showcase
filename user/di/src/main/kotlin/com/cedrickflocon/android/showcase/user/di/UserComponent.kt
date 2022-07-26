@@ -35,8 +35,4 @@ interface UserComponent {
 
     }
 
-    interface Provider {
-        fun provideUserComponent(): UserComponent
-    }
-
 }

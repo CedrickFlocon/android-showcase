@@ -3,4 +3,5 @@
     <string name="showcase_search_hint">Search</string>
     <string name="showcase_search_error">Something went wrong…</string>
     <string name="showcase_search_empty">No Result</string>
+    <string name="showcase_search_clean">Find your stuff.</string>
 </resources>
