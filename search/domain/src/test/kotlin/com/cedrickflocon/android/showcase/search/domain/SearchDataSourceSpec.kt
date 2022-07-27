@@ -6,9 +6,7 @@ import arrow.core.right
 import com.google.common.truth.Truth.assertThat
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -24,20 +22,29 @@ class SearchDataSourceSpec : DescribeSpec({
         val dataSource = SearchDataSource(useCase, CoroutineScope(UnconfinedTestDispatcher()))
 
         describe("subscription") {
-            val subscription = dataSource.states.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+            val subscription = dataSource.data.testIn(CoroutineScope(UnconfinedTestDispatcher()))
             afterTest {
                 assertThat(subscription.cancelAndConsumeRemainingEvents())
                     .isEmpty()
             }
 
             it("should have a first item") {
-                assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Clean::class.java)
+                assertThat(subscription.awaitItem())
+                    .isEqualTo(
+                        SearchDataSource.State(
+                            searchParams = SearchParams(query = ""),
+                            nextCursor = null,
+                            error = false,
+                            loading = false,
+                            items = null
+                        )
+                    )
             }
 
             describe("second subscription") {
                 val searchParams = mockk<SearchParams>()
-                val secondSubscription = dataSource.states.testIn(CoroutineScope(UnconfinedTestDispatcher()))
-                coEvery { useCase.search(searchParams, null) } coAnswers { mockk<SearchResult>().right() }
+                val secondSubscription = dataSource.data.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+                coEvery { useCase.search(searchParams, null) } coAnswers { mockk<SearchResult>(relaxed = true).right() }
                 afterTest {
                     assertThat(secondSubscription.cancelAndConsumeRemainingEvents())
                         .isEmpty()
@@ -64,39 +71,92 @@ class SearchDataSourceSpec : DescribeSpec({
                 }
 
                 val secondSearchParams = mockk<SearchParams>()
-                val secondSearchResult = mockk<SearchResult>()
+                val secondSearchItem = mockk<List<SearchResultItem>>()
+                val secondSearchResult = mockk<SearchResult> {
+                    every { searchResultItem } returns secondSearchItem
+                }
                 coEvery {
                     useCase.search(secondSearchParams, null)
                 } returns secondSearchResult.right()
 
                 it("should cancel previous search") {
-                    assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Clean::class.java)
+                    val initialState = subscription.awaitItem()
 
                     dataSource.events.emit(SearchDataSource.Event.NewSearch(firstSearchParams))
-
-                    val loading = subscription.awaitItem()
-                    assertThat(loading).isInstanceOf(SearchDataSource.State.Loading::class.java)
+                    assertThat(subscription.awaitItem()).isEqualTo(
+                        initialState.copy(
+                            searchParams = firstSearchParams,
+                            loading = true
+                        )
+                    )
 
                     dataSource.events.emit(SearchDataSource.Event.NewSearch(secondSearchParams))
+                    assertThat(subscription.awaitItem()).isEqualTo(
+                        initialState.copy(
+                            searchParams = secondSearchParams,
+                            loading = true
+                        )
+                    )
+
                     val result = subscription.awaitItem()
-                    assertThat((result as SearchDataSource.State.Result).searchResult).isEqualTo(secondSearchResult)
+                    assertThat(result).isEqualTo(
+                        initialState.copy(
+                            searchParams = secondSearchParams,
+                            items = secondSearchItem
+                        )
+                    )
+                }
+            }
+
+            describe("retry") {
+                dataSource.events.emit(SearchDataSource.Event.Retry)
+
+                it("should do nothing") {
+                    assertThat(subscription.awaitItem())
+                        .isEqualTo(
+                            SearchDataSource.State(
+                                searchParams = SearchParams(query = ""),
+                                nextCursor = null,
+                                error = false,
+                                loading = false,
+                                items = null
+                            )
+                        )
+                    
+                    coVerify { useCase wasNot Called }
                 }
             }
 
             describe("search on success") {
                 val searchParams = mockk<SearchParams>()
-                val searchResult = mockk<SearchResult>()
+                val searchItem = mockk<List<SearchResultItem>>()
+                val searchResult = mockk<SearchResult> {
+                    every { searchResultItem } returns searchItem
+                }
                 coEvery { useCase.search(searchParams, null) } returns searchResult.right()
                 dataSource.events.emit(SearchDataSource.Event.NewSearch(searchParams))
 
                 it("should have a loading state & result") {
-                    assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Clean::class.java)
-                    assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Loading::class.java)
-                    assertThat((subscription.awaitItem() as SearchDataSource.State.Result).searchResult).isEqualTo(searchResult)
+                    val initialState = subscription.awaitItem()
+
+                    assertThat(subscription.awaitItem()).isEqualTo(
+                        initialState.copy(
+                            searchParams = searchParams,
+                            loading = true
+                        )
+                    )
+
+                    val result = subscription.awaitItem()
+                    assertThat(result).isEqualTo(
+                        initialState.copy(
+                            searchParams = searchParams,
+                            items = searchItem
+                        )
+                    )
                 }
 
                 describe("second subscription") {
-                    val secondSubscription = dataSource.states.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+                    val secondSubscription = dataSource.data.testIn(CoroutineScope(UnconfinedTestDispatcher()))
                     afterTest {
                         assertThat(secondSubscription.cancelAndConsumeRemainingEvents())
                             .isEmpty()
@@ -114,9 +174,49 @@ class SearchDataSourceSpec : DescribeSpec({
                 dataSource.events.emit(SearchDataSource.Event.NewSearch(searchParams))
 
                 it("should have an error") {
-                    assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Clean::class.java)
-                    assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Loading::class.java)
-                    assertThat(subscription.awaitItem()).isInstanceOf(SearchDataSource.State.Error::class.java)
+                    val initialState = subscription.awaitItem()
+
+                    assertThat(subscription.awaitItem()).isEqualTo(
+                        initialState.copy(
+                            searchParams = searchParams,
+                            loading = true
+                        )
+                    )
+
+                    assertThat(subscription.awaitItem()).isEqualTo(
+                        initialState.copy(
+                            searchParams = searchParams,
+                            error = true
+                        )
+                    )
+                }
+
+                describe("Retry") {
+                    val searchItem = mockk<List<SearchResultItem>>()
+                    val searchResult = mockk<SearchResult> {
+                        every { searchResultItem } returns searchItem
+                    }
+                    coEvery { useCase.search(searchParams, null) } returns searchResult.right()
+                    dataSource.events.emit(SearchDataSource.Event.Retry)
+
+                    it("should retry a search") {
+                        val initialState = subscription.awaitItem()
+                        subscription.skipItems(2)
+
+                        assertThat(subscription.awaitItem()).isEqualTo(
+                            initialState.copy(
+                                searchParams = searchParams,
+                                loading = true
+                            )
+                        )
+
+                        assertThat(subscription.awaitItem()).isEqualTo(
+                            initialState.copy(
+                                searchParams = searchParams,
+                                items = searchItem
+                            )
+                        )
+                    }
                 }
             }
         }

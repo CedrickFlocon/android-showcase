@@ -22,15 +22,18 @@ class SearchListViewModel @Inject constructor(
         error = false,
     )
 
-    val states = dataSource.states
+    val states = dataSource.data
         .map {
-            when (it) {
-                SearchDataSource.State.Clean -> initialState
-                SearchDataSource.State.Error -> initialState.onError()
-                SearchDataSource.State.Loading -> initialState.onLoading()
-                is SearchDataSource.State.Result -> initialState.onSuccess(mapper(it.searchResult) {
+            if (it.error) {
+                initialState.onError()
+            } else if (it.loading) {
+                initialState.onLoading()
+            } else if (!it.items.isNullOrEmpty()) {
+                initialState.onSuccess(mapper(it.items!!) {
                     router.navigateToUser(UserParams(it))
                 })
+            } else {
+                initialState
             }
         }
         .onStart { emit(initialState) }

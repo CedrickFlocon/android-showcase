@@ -2,7 +2,7 @@ package com.cedrickflocon.android.showcase.search.presentation.list
 
 import app.cash.turbine.testIn
 import com.cedrickflocon.android.showcase.search.domain.SearchDataSource
-import com.cedrickflocon.android.showcase.search.domain.SearchResult
+import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
 import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.cedrickflocon.android.showcase.user.router.UserRouter
 import com.google.common.truth.Truth.assertThat
@@ -19,7 +19,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
     val dataSource = mockk<SearchDataSource>()
     val dataSourceState = MutableSharedFlow<SearchDataSource.State>()
-    every { dataSource.states } returns dataSourceState
+    every { dataSource.data } returns dataSourceState
     val mapper = mockk<UiStateMapper>()
     val router = mockk<UserRouter>(relaxUnitFun = true)
     val viewModel = SearchListViewModel(dataSource, mapper, router)
@@ -31,6 +31,14 @@ class SearchListViewModelSpec : DescribeSpec({
 
     describe("subscription") {
         val subscription = viewModel.states.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+        val initialDataSourceState = SearchDataSource.State(
+            searchParams = mockk(),
+            nextCursor = null,
+            error = false,
+            loading = false,
+            items = null
+        )
+
         afterTest {
             assertThat(subscription.cancelAndConsumeRemainingEvents())
                 .isEmpty()
@@ -42,7 +50,7 @@ class SearchListViewModelSpec : DescribeSpec({
         }
 
         describe("clean state") {
-            dataSourceState.emit(SearchDataSource.State.Clean)
+            dataSourceState.emit(initialDataSourceState)
 
             it("should not emit a new state") {
                 assertThat(subscription.awaitItem())
@@ -51,7 +59,7 @@ class SearchListViewModelSpec : DescribeSpec({
         }
 
         describe("error state") {
-            dataSourceState.emit(SearchDataSource.State.Error)
+            dataSourceState.emit(initialDataSourceState.copy(error = true))
 
             it("last item should have an error") {
                 subscription.skipItems(1)
@@ -62,7 +70,7 @@ class SearchListViewModelSpec : DescribeSpec({
         }
 
         describe("loading state") {
-            dataSourceState.emit(SearchDataSource.State.Loading)
+            dataSourceState.emit(initialDataSourceState.copy(loading = true))
 
             it("last item should have loading items") {
                 subscription.skipItems(1)
@@ -81,10 +89,10 @@ class SearchListViewModelSpec : DescribeSpec({
 
         describe("result state") {
             val items = mockk<List<SearchListViewModel.UiState.Item>>()
-            val searchResult = mockk<SearchResult>()
+            val searchResultItem = mockk<List<SearchResultItem>>()
             val lambda = slot<(String) -> Unit>()
-            every { mapper(searchResult, capture(lambda)) } returns items
-            dataSourceState.emit(SearchDataSource.State.Result(searchResult))
+            every { mapper(searchResultItem, capture(lambda)) } returns items
+            dataSourceState.emit(initialDataSourceState.copy(items = searchResultItem))
 
             it("last item should have result items") {
                 subscription.skipItems(1)

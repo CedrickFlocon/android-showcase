@@ -1,6 +1,5 @@
 package com.cedrickflocon.android.showcase.search.presentation.list
 
-import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
 import com.google.common.truth.Truth
 import io.kotest.core.spec.style.DescribeSpec
@@ -13,29 +12,26 @@ class UiStateMapperSpec : DescribeSpec({
 
     describe("Search Result") {
         val onClick = mockk<(String) -> Unit>(relaxed = true)
-        val searchResult = SearchResult(
-            listOf(
-                mockk(),
-                SearchResultItem.User(
-                    "unclebob@showcase.com",
-                    "UncleBob",
-                    "Robert Cecil Martin",
-                    URI("http://robert.cecil.martin.com")
-                ),
-                mockk(),
-                SearchResultItem.User(
-                    "bobby@showcase.com",
-                    "Bobby",
-                    null,
-                    URI("http://bobby.com")
-                ),
+        val searchResultItems = listOf(
+            mockk(),
+            SearchResultItem.User(
+                "unclebob@showcase.com",
+                "UncleBob",
+                "Robert Cecil Martin",
+                URI("http://robert.cecil.martin.com")
             ),
-            mockk()
+            mockk(),
+            SearchResultItem.User(
+                "bobby@showcase.com",
+                "Bobby",
+                null,
+                URI("http://bobby.com")
+            ),
         )
 
         describe("map") {
             lateinit var items: List<SearchListViewModel.UiState.Item>
-            beforeEach { items = mapper(searchResult, onClick) }
+            beforeEach { items = mapper(searchResultItems, onClick) }
 
             it("can be transform to a success") {
                 Truth.assertThat(items).hasSize(2)
