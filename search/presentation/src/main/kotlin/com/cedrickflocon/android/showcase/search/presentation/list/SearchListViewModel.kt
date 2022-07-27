@@ -1,11 +1,10 @@
 package com.cedrickflocon.android.showcase.search.presentation.list
 
 import com.cedrickflocon.android.showcase.search.domain.SearchDataSource
+import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
 import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.cedrickflocon.android.showcase.user.router.UserRouter
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
 import java.net.URI
 import javax.inject.Inject
 import kotlin.random.Random
@@ -20,57 +19,64 @@ class SearchListViewModel @Inject constructor(
     val initialState = UiState(
         items = null,
         error = false,
-    )
+    ) { events.emit(Event.OnScroll(it)) }
 
-    val states = dataSource.data
-        .map {
-            if (it.error) {
-                initialState.onError()
-            } else if (it.loading) {
-                initialState.onLoading()
-            } else if (!it.items.isNullOrEmpty()) {
-                initialState.onSuccess(mapper(it.items!!) {
-                    router.navigateToUser(UserParams(it))
-                })
-            } else {
-                initialState
+    private val loadingItems = List(3) {
+        UiState.Item(
+            loading = true,
+            email = (0..Random.nextInt(10 until 20)).joinToString("") { " " },
+            login = (0..Random.nextInt(10 until 20)).joinToString("") { " " },
+            avatarUrl = URI(""),
+            onClickItem = {})
+    }
+    private val events = MutableSharedFlow<Event>()
+
+    val states = merge(
+        dataSource.data
+            .map { state ->
+                val result = state.items
+                    ?.let { mapper(it) { events.emit(Event.OnClickUser(it)) } }
+
+                val loading = loadingItems
+                    .takeIf { state.loading }
+
+                initialState.copy(
+                    error = state.error,
+                    items = (result?.plus(loading ?: emptyList()) ?: loading)
+                )
             }
-        }
-        .onStart { emit(initialState) }
-        .distinctUntilChanged()
+            .onStart { emit(initialState) }
+            .distinctUntilChanged(),
 
-    private fun UiState.onLoading() = this.copy(
-        items = List(3) {
-            UiState.Item(
-                loading = true,
-                email = (0..Random.nextInt(10 until 20)).joinToString("") { " " },
-                login = (0..Random.nextInt(10 until 20)).joinToString("") { " " },
-                avatarUrl = URI(""),
-                onClickItem = {})
-        },
-        error = false
+        events
+            .combine(dataSource.data) { event, data -> event to data }
+            .onEach { (event, data) ->
+                when (event) {
+                    is Event.OnScroll -> if (event.index >= (data.items?.size?.minus(1) ?: Int.MAX_VALUE)) {
+                        dataSource.events.emit(SearchDataSource.Event.NextPage)
+                    }
+                    is Event.OnClickUser -> router.navigateToUser(UserParams(event.searchResultItem.login))
+                }
+            }
+            .flatMapLatest { emptyFlow() }
     )
 
-    private fun UiState.onSuccess(items: List<UiState.Item>) = this.copy(
-        items = items,
-        error = false
-    )
-
-    private fun UiState.onError() = this.copy(
-        items = null,
-        error = true,
-    )
+    private sealed interface Event {
+        data class OnClickUser(val searchResultItem: SearchResultItem.User) : Event
+        data class OnScroll(val index: Int) : Event
+    }
 
     data class UiState(
         val items: List<Item>?,
         val error: Boolean,
+        val onScroll: suspend (Int) -> Unit
     ) {
         data class Item(
             val loading: Boolean,
             val email: String,
             val login: String,
             val avatarUrl: URI,
-            val onClickItem: () -> Unit,
+            val onClickItem: suspend () -> Unit,
         )
     }
 

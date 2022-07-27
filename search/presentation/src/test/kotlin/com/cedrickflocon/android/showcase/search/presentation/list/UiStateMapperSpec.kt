@@ -1,26 +1,30 @@
 package com.cedrickflocon.android.showcase.search.presentation.list
 
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.DescribeSpec
 import io.mockk.mockk
 import io.mockk.verify
 import java.net.URI
 
 class UiStateMapperSpec : DescribeSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
+    coroutineTestScope = true
+
     val mapper = UiStateMapper()
 
     describe("Search Result") {
-        val onClick = mockk<(String) -> Unit>(relaxed = true)
+        val onClick = mockk<((SearchResultItem.User) -> Unit)>(relaxed = true)
         val searchResultItems = listOf(
-            mockk(),
+            mockk<SearchResultItem>(),
             SearchResultItem.User(
                 "unclebob@showcase.com",
                 "UncleBob",
                 "Robert Cecil Martin",
                 URI("http://robert.cecil.martin.com")
             ),
-            mockk(),
+            mockk<SearchResultItem>(),
             SearchResultItem.User(
                 "bobby@showcase.com",
                 "Bobby",
@@ -30,34 +34,27 @@ class UiStateMapperSpec : DescribeSpec({
         )
 
         describe("map") {
-            lateinit var items: List<SearchListViewModel.UiState.Item>
-            beforeEach { items = mapper(searchResultItems, onClick) }
+            val items = mapper(searchResultItems, onClick)
 
             it("can be transform to a success") {
-                Truth.assertThat(items).hasSize(2)
+                assertThat(items).hasSize(2)
 
                 with(items[0]) {
-                    Truth.assertThat(this.loading).isEqualTo(false)
-                    Truth.assertThat(this.email).isEqualTo("unclebob@showcase.com")
-                    Truth.assertThat(this.login).isEqualTo("UncleBob")
-                    Truth.assertThat(this.avatarUrl).isEqualTo(URI("http://robert.cecil.martin.com"))
+                    assertThat(this.loading).isEqualTo(false)
+                    assertThat(this.email).isEqualTo("unclebob@showcase.com")
+                    assertThat(this.login).isEqualTo("UncleBob")
+                    assertThat(this.avatarUrl).isEqualTo(URI("http://robert.cecil.martin.com"))
+                    this.onClickItem()
+                    verify { onClick(searchResultItems[1] as SearchResultItem.User) }
                 }
 
                 with(items[1]) {
-                    Truth.assertThat(this.loading).isEqualTo(false)
-                    Truth.assertThat(this.email).isEqualTo("bobby@showcase.com")
-                    Truth.assertThat(this.login).isEqualTo("Bobby")
-                    Truth.assertThat(this.avatarUrl).isEqualTo(URI("http://bobby.com"))
-                }
-            }
-
-            items.forEach { item ->
-                describe("click on item ${item.login}") {
-                    beforeEach { item.onClickItem() }
-
-                    it("should call onclick") {
-                        verify { onClick(item.login) }
-                    }
+                    assertThat(this.loading).isEqualTo(false)
+                    assertThat(this.email).isEqualTo("bobby@showcase.com")
+                    assertThat(this.login).isEqualTo("Bobby")
+                    assertThat(this.avatarUrl).isEqualTo(URI("http://bobby.com"))
+                    this.onClickItem()
+                    verify { onClick(searchResultItems[3] as SearchResultItem.User) }
                 }
             }
         }

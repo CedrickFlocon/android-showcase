@@ -71,9 +71,10 @@ class SearchDataSourceSpec : DescribeSpec({
                 }
 
                 val secondSearchParams = mockk<SearchParams>()
-                val secondSearchItem = mockk<List<SearchResultItem>>()
+                val secondSearchItem = listOf<SearchResultItem>(mockk(), mockk(), mockk())
                 val secondSearchResult = mockk<SearchResult> {
                     every { searchResultItem } returns secondSearchItem
+                    every { pageInfo.nextCursor } returns "firstCursor"
                 }
                 coEvery {
                     useCase.search(secondSearchParams, null)
@@ -102,36 +103,45 @@ class SearchDataSourceSpec : DescribeSpec({
                     assertThat(result).isEqualTo(
                         initialState.copy(
                             searchParams = secondSearchParams,
-                            items = secondSearchItem
+                            nextCursor = "firstCursor",
+                            items = secondSearchItem,
                         )
                     )
                 }
             }
 
-            describe("retry") {
-                dataSource.events.emit(SearchDataSource.Event.Retry)
+            describe("invalid event") {
+                listOf(
+                    SearchDataSource.Event.Retry,
+                    SearchDataSource.Event.NextPage
+                ).forEach {
+                    describe("Event : $it") {
+                        dataSource.events.emit(it)
 
-                it("should do nothing") {
-                    assertThat(subscription.awaitItem())
-                        .isEqualTo(
-                            SearchDataSource.State(
-                                searchParams = SearchParams(query = ""),
-                                nextCursor = null,
-                                error = false,
-                                loading = false,
-                                items = null
-                            )
-                        )
-                    
-                    coVerify { useCase wasNot Called }
+                        it("should do nothing") {
+                            assertThat(subscription.awaitItem())
+                                .isEqualTo(
+                                    SearchDataSource.State(
+                                        searchParams = SearchParams(query = ""),
+                                        nextCursor = null,
+                                        error = false,
+                                        loading = false,
+                                        items = null
+                                    )
+                                )
+
+                            coVerify { useCase wasNot Called }
+                        }
+                    }
                 }
             }
 
             describe("search on success") {
                 val searchParams = mockk<SearchParams>()
-                val searchItem = mockk<List<SearchResultItem>>()
+                val firstPageItem = listOf<SearchResultItem>(mockk(), mockk(), mockk())
                 val searchResult = mockk<SearchResult> {
-                    every { searchResultItem } returns searchItem
+                    every { searchResultItem } returns firstPageItem
+                    every { pageInfo.nextCursor } returns "firstCursor"
                 }
                 coEvery { useCase.search(searchParams, null) } returns searchResult.right()
                 dataSource.events.emit(SearchDataSource.Event.NewSearch(searchParams))
@@ -150,9 +160,50 @@ class SearchDataSourceSpec : DescribeSpec({
                     assertThat(result).isEqualTo(
                         initialState.copy(
                             searchParams = searchParams,
-                            items = searchItem
+                            nextCursor = "firstCursor",
+                            items = firstPageItem,
                         )
                     )
+                }
+
+                describe("last page") {
+                    val secondPageITem = listOf<SearchResultItem>(mockk(), mockk(), mockk())
+                    val newSearchResult = mockk<SearchResult> {
+                        every { searchResultItem } returns secondPageITem
+                        every { pageInfo.nextCursor } returns null
+                    }
+                    coEvery { useCase.search(searchParams, "firstCursor") } returns newSearchResult.right()
+                    dataSource.events.emit(SearchDataSource.Event.NextPage)
+
+                    it("should have loading & new items state") {
+                        subscription.skipItems(2)
+                        val successState = subscription.awaitItem()
+                        assertThat(successState.items).isEqualTo(firstPageItem)
+
+
+                        assertThat(subscription.awaitItem()).isEqualTo(
+                            successState.copy(
+                                loading = true
+                            )
+                        )
+
+                        val result = subscription.awaitItem()
+                        assertThat(result).isEqualTo(
+                            successState.copy(
+                                items = firstPageItem + secondPageITem,
+                                nextCursor = null
+                            )
+                        )
+                    }
+
+                    describe("Next Page") {
+                        dataSource.events.emit(SearchDataSource.Event.NextPage)
+
+                        it("should not produce state") {
+                            subscription.skipItems(5)
+                            coVerify(exactly = 2) { useCase.search(any(), any()) }
+                        }
+                    }
                 }
 
                 describe("second subscription") {
@@ -191,10 +242,11 @@ class SearchDataSourceSpec : DescribeSpec({
                     )
                 }
 
-                describe("Retry") {
-                    val searchItem = mockk<List<SearchResultItem>>()
+                describe("retry") {
+                    val searchItem = listOf<SearchResultItem>(mockk(), mockk(), mockk())
                     val searchResult = mockk<SearchResult> {
                         every { searchResultItem } returns searchItem
+                        every { pageInfo.nextCursor } returns "firstCursor"
                     }
                     coEvery { useCase.search(searchParams, null) } returns searchResult.right()
                     dataSource.events.emit(SearchDataSource.Event.Retry)
@@ -213,6 +265,7 @@ class SearchDataSourceSpec : DescribeSpec({
                         assertThat(subscription.awaitItem()).isEqualTo(
                             initialState.copy(
                                 searchParams = searchParams,
+                                nextCursor = "firstCursor",
                                 items = searchItem
                             )
                         )

@@ -5,13 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +23,9 @@ import com.cedrickflocon.android.showcase.search.presentation.R
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 @Composable
 fun SearchList() {
@@ -53,8 +54,19 @@ fun SearchList() {
             Text(text = stringResource(R.string.showcase_search_empty))
         }
     } else if (uiState.items != null) {
-        LazyColumn(modifier = Modifier.padding(top = 8.dp)) {
+        val listState = rememberLazyListState()
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.padding(top = 8.dp)
+        ) {
             itemsIndexed(uiState.items) { _, item -> UserItem(item) }
+        }
+
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+                .distinctUntilChanged()
+                .mapNotNull { it.lastOrNull()?.index }
+                .collect { uiState.onScroll(it) }
         }
     } else if (uiState.error) {
         Column(
@@ -85,12 +97,13 @@ private fun Modifier.loading(user: SearchListViewModel.UiState.Item): Modifier {
 
 @Composable
 fun UserItem(user: SearchListViewModel.UiState.Item) {
+    val scope = rememberCoroutineScope()
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-            .clickable(onClick = user.onClickItem)
+            .clickable(onClick = { scope.launch { user.onClickItem() } })
     ) {
         AsyncImage(
             model = user.avatarUrl.toString(),

@@ -32,7 +32,7 @@ class SearchDataSource @Inject constructor(
                         emit(newState)
                         useCase.search(it.searchParams, null).fold(
                             { emit(newState.onError()) },
-                            { emit(newState.onSuccess(it.searchResultItem)) }
+                            { emit(newState.onSuccess(it)) }
                         )
                     }
                     Event.Retry -> {
@@ -40,7 +40,15 @@ class SearchDataSource @Inject constructor(
                         emit(newState)
                         useCase.search(newState.searchParams, newState.nextCursor).fold(
                             { emit(newState.onError()) },
-                            { emit(newState.onSuccess(it.searchResultItem)) }
+                            { emit(newState.onSuccess(it)) }
+                        )
+                    }
+                    Event.NextPage -> {
+                        val newState = state.value.onLoading(state.value.searchParams)
+                        emit(newState)
+                        useCase.search(newState.searchParams, newState.nextCursor).fold(
+                            { emit(newState.onError()) },
+                            { emit(newState.onSuccess(it)) }
                         )
                     }
                 }
@@ -62,10 +70,11 @@ class SearchDataSource @Inject constructor(
         loading = false
     )
 
-    private fun State.onSuccess(resultItem: List<SearchResultItem>) = this.copy(
+    private fun State.onSuccess(searchResult: SearchResult) = this.copy(
         error = false,
         loading = false,
-        items = resultItem
+        items = (this.items ?: emptyList()) + searchResult.searchResultItem,
+        nextCursor = searchResult.pageInfo.nextCursor
     )
 
     sealed interface Event {
@@ -77,6 +86,10 @@ class SearchDataSource @Inject constructor(
 
         data class NewSearch(val searchParams: SearchParams) : Event {
             override fun isValid(state: State) = true
+        }
+
+        object NextPage : Event {
+            override fun isValid(state: State) = state.nextCursor != null && !state.loading && !state.error
         }
     }
 
