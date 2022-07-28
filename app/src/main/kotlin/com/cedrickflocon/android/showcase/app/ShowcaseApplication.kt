@@ -1,18 +1,14 @@
 package com.cedrickflocon.android.showcase.app
 
 import android.app.Application
-import com.cedrickflocon.android.showcase.search.di.SearchComponent
-import com.cedrickflocon.android.showcase.user.di.UserComponent
+import com.cedrickflocon.showcase.core.di.DataComponent
 
 class ShowcaseApplication :
     Application(),
-    UserComponent.Provider,
-    SearchComponent.Provider {
+    DataComponent.Provider {
 
     private val graph = Graph()
 
-    override fun provideUserComponent(): UserComponent = graph.userComponent
-
-    override fun provideSearchComponent(): SearchComponent = graph.searchComponent
+    override fun provideDataComponent(): DataComponent = graph.dataComponent
 
 }

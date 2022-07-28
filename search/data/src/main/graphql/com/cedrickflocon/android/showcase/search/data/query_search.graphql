@@ -1,7 +1,8 @@
 query search(
     $query: String!,
+    $after: String,
 ) {
-    search(type: USER, query: $query, first: 10) {
+    search(type: USER, query: $query, first: 25, after: $after) {
         nodes {
             ... on User {
                 email
@@ -9,6 +10,9 @@ query search(
                 name
                 avatarUrl
             }
+        }
+        pageInfo {
+            endCursor
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.cedrickflocon.android.showcase.search.data
 
+import com.cedrickflocon.android.showcase.search.domain.PageInfo
 import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
 import com.cedrickflocon.android.showcase.user.data.SearchQuery
@@ -32,7 +33,8 @@ class SearchMapperSpec : DescribeSpec({
                         URI("http://bobby.com")
                     )
                 ),
-            )
+            ),
+            SearchQuery.PageInfo("Y3Vyc29yOjEw")
         )
 
         it("can transform the search") {
@@ -51,7 +53,8 @@ class SearchMapperSpec : DescribeSpec({
                             null,
                             URI("http://bobby.com")
                         ),
-                    )
+                    ),
+                    PageInfo("Y3Vyc29yOjEw")
                 )
             )
         }

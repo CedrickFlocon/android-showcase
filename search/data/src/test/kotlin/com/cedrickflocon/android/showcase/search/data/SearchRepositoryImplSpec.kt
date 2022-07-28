@@ -3,9 +3,11 @@ package com.cedrickflocon.android.showcase.search.data
 import arrow.core.left
 import arrow.core.right
 import com.apollographql.apollo3.api.ApolloResponse
+import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.exception.ApolloException
 import com.cedrickflocon.android.showcase.core.data.graphql.GraphQLClient
 import com.cedrickflocon.android.showcase.search.domain.SearchError
+import com.cedrickflocon.android.showcase.search.domain.SearchParams
 import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.user.data.SearchQuery
 import com.google.common.truth.Truth.assertThat
@@ -21,7 +23,9 @@ class SearchRepositoryImplSpec : DescribeSpec({
     val repository = SearchRepositoryImpl(graphqlClient, mapper)
 
     describe("search query") {
-        val query = SearchQuery("Robert Cecil Martin")
+        val query = SearchQuery("Robert Cecil Martin", Optional.presentIfNotNull("Y3Vyc29yOjEw"))
+        val searchParams = SearchParams("Robert Cecil Martin")
+        val cursor = "Y3Vyc29yOjEw"
 
         describe("data") {
             val searchResult = mockk<SearchResult>()
@@ -39,8 +43,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
             }
 
             it("return search result") {
-                assertThat(repository.search("Robert Cecil Martin"))
-                    .isEqualTo(searchResult.right())
+                assertThat(repository.search(searchParams, cursor)).isEqualTo(searchResult.right())
             }
         }
 
@@ -52,7 +55,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
             }
 
             it("return search result") {
-                assertThat(runCatching { repository.search("Robert Cecil Martin") }.exceptionOrNull())
+                assertThat(runCatching { repository.search(searchParams, cursor) }.exceptionOrNull())
                     .isInstanceOf(IllegalStateException::class.java)
             }
         }
@@ -64,7 +67,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
                 }
 
                 it("return network error") {
-                    assertThat(repository.search("Robert Cecil Martin"))
+                    assertThat(repository.search(searchParams, cursor))
                         .isEqualTo(SearchError.Network.left())
                 }
             }
@@ -76,7 +79,7 @@ class SearchRepositoryImplSpec : DescribeSpec({
                 }
 
                 it("should throw exception") {
-                    assertThat(runCatching { repository.search("Robert Cecil Martin") }.exceptionOrNull())
+                    assertThat(runCatching { repository.search(searchParams, cursor) }.exceptionOrNull())
                         .isEqualTo(exception)
                 }
             }

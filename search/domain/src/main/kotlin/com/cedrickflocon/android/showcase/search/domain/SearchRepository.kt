@@ -5,6 +5,6 @@ import arrow.core.Either
 
 interface SearchRepository {
 
-    suspend fun search(query: String): Either<SearchError, SearchResult>
+    suspend fun search(searchParams: SearchParams, cursor: String?): Either<SearchError, SearchResult>
 
 }

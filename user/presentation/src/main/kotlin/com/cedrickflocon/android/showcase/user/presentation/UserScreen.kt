@@ -6,10 +6,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,7 +48,7 @@ private fun UserProfile(state: UserViewModel.UiState.Success) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                state.name?.let { Text(it, style = MaterialTheme.typography.headlineMedium) }
+                state.name?.let { Text(it, style = MaterialTheme.typography.subtitle1) }
                 Text(state.login)
             }
         }

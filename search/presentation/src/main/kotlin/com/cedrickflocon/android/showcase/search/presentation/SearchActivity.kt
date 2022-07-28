@@ -3,13 +3,18 @@ package com.cedrickflocon.android.showcase.search.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.staticCompositionLocalOf
 import com.cedrickflocon.android.showcase.design.Theme
+import com.cedrickflocon.android.showcase.search.di.DaggerSearchComponent
 import com.cedrickflocon.android.showcase.search.di.SearchComponent
+import com.cedrickflocon.showcase.core.di.DataComponent
+
+val LocalSearchComponent = staticCompositionLocalOf<SearchComponent> {
+    error("CompositionLocal SearchComponent not present")
+}
 
 class SearchActivity : ComponentActivity() {
 
@@ -17,23 +22,19 @@ class SearchActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Theme {
-                val viewModel = remember {
-                    DaggerViewModelComponent
+                val scope = rememberCoroutineScope()
+                val searchComponent = remember {
+                    DaggerSearchComponent
                         .factory()
                         .create(
-                            this,
-                            (application as SearchComponent.Provider).provideSearchComponent()
+                            scope,
+                            (application as DataComponent.Provider).provideDataComponent()
                         )
-                        .provideViewModel()
                 }
-
-                val value = viewModel.states.collectAsState(initial = viewModel.initialState).value
-
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    SearchScreen(value)
+                CompositionLocalProvider(LocalSearchComponent provides searchComponent) {
+                    SearchScreen()
                 }
             }
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.cedrickflocon.android.showcase.search.data
 
+import com.cedrickflocon.android.showcase.search.domain.PageInfo
 import com.cedrickflocon.android.showcase.search.domain.SearchResult
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
 import com.cedrickflocon.android.showcase.user.data.SearchQuery
@@ -9,7 +10,7 @@ class SearchMapper @Inject constructor() : (SearchQuery.Search) -> SearchResult 
 
     override fun invoke(gqlSearch: SearchQuery.Search): SearchResult {
         return SearchResult(
-            gqlSearch.nodes
+            searchResultItem = gqlSearch.nodes
                 ?.mapNotNull { it?.onUser }
                 ?.map {
                     SearchResultItem.User(
@@ -18,7 +19,8 @@ class SearchMapper @Inject constructor() : (SearchQuery.Search) -> SearchResult 
                         name = it.name,
                         avatarUrl = it.avatarUrl
                     )
-                } ?: emptyList())
+                } ?: emptyList(),
+            pageInfo = PageInfo(nextCursor = gqlSearch.pageInfo.endCursor))
     }
 
 }
