@@ -49,60 +49,66 @@ fun SearchList() {
     Scaffold(
         scaffoldState = scaffoldState,
     ) {
-        it.calculateBottomPadding()
-        if (uiState.items?.isEmpty() == true) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = stringResource(R.string.showcase_search_empty))
-            }
-        } else if (uiState.items != null) {
-            val listState = rememberLazyListState()
-            LazyColumn(
-                state = listState,
-                modifier = Modifier.padding(top = 8.dp)
-            ) {
-                itemsIndexed(uiState.items) { _, item -> UserItem(item) }
-            }
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
+            if (uiState.items?.isEmpty() == true) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = stringResource(R.string.showcase_search_empty))
+                }
+            } else if (uiState.items != null) {
+                val listState = rememberLazyListState()
+                LazyColumn(
+                    state = listState,
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    itemsIndexed(uiState.items) { _, item -> UserItem(item) }
+                }
 
-            LaunchedEffect(listState) {
-                snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-                    .distinctUntilChanged()
-                    .mapNotNull { it.lastOrNull()?.index }
-                    .collect { uiState.onScroll(it) }
-            }
+                LaunchedEffect(listState) {
+                    snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+                        .distinctUntilChanged()
+                        .mapNotNull { it.lastOrNull()?.index }
+                        .collect { uiState.onScroll(it) }
+                }
 
-            val errorString = stringResource(id = R.string.showcase_search_error)
-            val retryString = stringResource(id = R.string.showcase_search_retry)
+                val errorString = stringResource(id = R.string.showcase_search_error)
+                val retryString = stringResource(id = R.string.showcase_search_retry)
 
-            LaunchedEffect(uiState.error) {
-                if (uiState.error != null) {
-                    val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(errorString, retryString, SnackbarDuration.Indefinite)
-                    when (snackbarResult) {
-                        SnackbarResult.ActionPerformed -> uiState.error.invoke()
+                LaunchedEffect(uiState.error) {
+                    if (uiState.error != null) {
+                        val snackbarResult = scaffoldState.snackbarHostState.showSnackbar(errorString, retryString, SnackbarDuration.Indefinite)
+                        when (snackbarResult) {
+                            SnackbarResult.ActionPerformed -> uiState.error.invoke()
+                            SnackbarResult.Dismissed -> {} //Do nothing
+                        }
                     }
                 }
-            }
-        } else if (uiState.error != null) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(stringResource(id = R.string.showcase_search_error))
-                Button(onClick = { coroutineScope.launch { uiState.error.invoke() } }) {
-                    Text(stringResource(id = R.string.showcase_search_retry))
+            } else if (uiState.error != null) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(stringResource(id = R.string.showcase_search_error))
+                    Button(onClick = { coroutineScope.launch { uiState.error.invoke() } }) {
+                        Text(stringResource(id = R.string.showcase_search_retry))
+                    }
                 }
-            }
-        } else {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = stringResource(R.string.showcase_search_clean))
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = stringResource(R.string.showcase_search_clean))
+                }
             }
         }
     }
