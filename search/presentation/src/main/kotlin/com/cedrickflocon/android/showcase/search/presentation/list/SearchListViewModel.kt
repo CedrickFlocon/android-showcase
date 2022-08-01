@@ -18,7 +18,7 @@ class SearchListViewModel @Inject constructor(
 
     val initialState = UiState(
         items = null,
-        error = false,
+        error = null,
     ) { events.emit(Event.OnScroll(it)) }
 
     private val loadingItems = List(3) {
@@ -41,7 +41,7 @@ class SearchListViewModel @Inject constructor(
                     .takeIf { state.loading }
 
                 initialState.copy(
-                    error = state.error,
+                    error = if (state.error) ({ dataSource.events.emit(SearchDataSource.Event.Retry) }) else null,
                     items = (result?.plus(loading ?: emptyList()) ?: loading)
                 )
             }
@@ -68,7 +68,7 @@ class SearchListViewModel @Inject constructor(
 
     data class UiState(
         val items: List<Item>?,
-        val error: Boolean,
+        val error: (suspend () -> Unit)?,
         val onScroll: suspend (Int) -> Unit
     ) {
         data class Item(
