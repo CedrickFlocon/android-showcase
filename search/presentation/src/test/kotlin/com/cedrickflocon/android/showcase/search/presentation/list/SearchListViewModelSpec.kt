@@ -29,7 +29,7 @@ class SearchListViewModelSpec : DescribeSpec({
         val initialState = viewModel.initialState
 
         it("should be empty") {
-            assertThat(initialState.error).isFalse()
+            assertThat(initialState.error).isNull()
             assertThat(initialState.items).isNull()
         }
 
@@ -60,7 +60,7 @@ class SearchListViewModelSpec : DescribeSpec({
             val initialState = subscription.awaitItem()
 
             it("should be empty") {
-                assertThat(initialState.error).isFalse()
+                assertThat(initialState.error).isNull()
                 assertThat(initialState.items).isNull()
             }
 
@@ -78,7 +78,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
             it("should be empty") {
                 val initialState = subscription.awaitItem()
-                assertThat(initialState.error).isFalse()
+                assertThat(initialState.error).isNull()
                 assertThat(initialState.items).isNull()
             }
         }
@@ -90,8 +90,11 @@ class SearchListViewModelSpec : DescribeSpec({
                 subscription.skipItems(1)
 
                 val errorState = subscription.awaitItem()
-                assertThat(errorState.error).isTrue()
                 assertThat(errorState.items).isNull()
+
+                assertThat(errorState.error).isNotNull()
+                errorState.error!!.invoke()
+                coVerify { dataSource.events.emit(SearchDataSource.Event.Retry) }
             }
         }
 
@@ -103,7 +106,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
                 val loading = subscription.awaitItem()
                 assertThat(loading.items).hasSize(3)
-                assertThat(loading.error).isFalse()
+                assertThat(loading.error).isNull()
 
                 loading.items!!.forEach {
                     assertThat(it.loading).isTrue()
@@ -122,7 +125,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
                 val success = subscription.awaitItem()
                 assertThat(success.items).isEmpty()
-                assertThat(success.error).isFalse()
+                assertThat(success.error).isNull()
             }
         }
 
@@ -138,7 +141,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
                 val success = subscription.awaitItem()
                 assertThat(success.items).isEqualTo(items)
-                assertThat(success.error).isFalse()
+                assertThat(success.error).isNull()
 
                 lambda.captured.invoke(mockk { every { login } returns "bobby" })
                 verify { router.navigateToUser(UserParams("bobby")) }
@@ -174,7 +177,7 @@ class SearchListViewModelSpec : DescribeSpec({
                         assertThat(it.login.length).isIn(10..20)
                         assertThat(it.email.length).isIn(10..20)
                     }
-                    assertThat(success.error).isFalse()
+                    assertThat(success.error).isNull()
 
                     lambda.captured.invoke(mockk { every { login } returns "bobby" })
                     verify { router.navigateToUser(UserParams("bobby")) }
@@ -189,7 +192,9 @@ class SearchListViewModelSpec : DescribeSpec({
 
                     val success = subscription.awaitItem()
                     assertThat(success.items).isEqualTo(items)
-                    assertThat(success.error).isTrue()
+                    assertThat(success.error).isNotNull()
+                    success.error!!.invoke()
+                    coVerify { dataSource.events.emit(SearchDataSource.Event.Retry) }
 
                     lambda.captured.invoke(mockk { every { login } returns "bobby" })
                     verify { router.navigateToUser(UserParams("bobby")) }

@@ -4,4 +4,5 @@
     <string name="showcase_search_error">Something went wrong…</string>
     <string name="showcase_search_empty">No Result</string>
     <string name="showcase_search_clean">Find your stuff.</string>
+    <string name="showcase_search_retry">Retry</string>
 </resources>
