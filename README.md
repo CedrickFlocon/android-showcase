@@ -8,7 +8,7 @@ This project aims to show a modern architecture of an android project. To emphas
 ### Modular
 This project use a 3 layers architecture (presentation, domain, data) by feature (search, user ...).
 
-<img src="docs/architecture.png" />
+<img src="docs/architecture.svg" />
 
 
 ### Global
@@ -25,9 +25,9 @@ Expose data to the `domain` layer through a dependency inversion. Data can come 
 Define screen rendering with an MVVM pattern.
 
 ### Core
-All transverse component is store in sub module of `core`.
+All transverse component is store in sub module of `core`.  
 e.g :   
-`:core:presentation:design` => design system of the application share to all `:feature:presentation`
+`:core:presentation:design` => design system of the application share to all `:feature:presentation`  
 `:core:data:graphql` => graphql configuration share to all `:feature:data`
 
 
