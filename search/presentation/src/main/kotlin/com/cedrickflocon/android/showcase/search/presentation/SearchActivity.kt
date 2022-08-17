@@ -10,7 +10,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import com.cedrickflocon.android.showcase.core.presentation.design.Theme
 import com.cedrickflocon.android.showcase.search.di.DaggerSearchComponent
 import com.cedrickflocon.android.showcase.search.di.SearchComponent
-import com.cedrickflocon.showcase.core.di.DataComponent
+import com.cedrickflocon.android.showcase.core.di.DataComponent
 
 val LocalSearchComponent = staticCompositionLocalOf<SearchComponent> {
     error("CompositionLocal SearchComponent not present")

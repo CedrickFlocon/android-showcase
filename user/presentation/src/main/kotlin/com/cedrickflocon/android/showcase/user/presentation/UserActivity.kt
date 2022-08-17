@@ -12,7 +12,7 @@ import com.cedrickflocon.android.showcase.core.presentation.design.Theme
 import com.cedrickflocon.android.showcase.user.di.DaggerUserComponent
 import com.cedrickflocon.android.showcase.user.di.UserComponent
 import com.cedrickflocon.android.showcase.user.router.UserRouter
-import com.cedrickflocon.showcase.core.di.DataComponent
+import com.cedrickflocon.android.showcase.core.di.DataComponent
 
 class UserActivity : ComponentActivity() {
 

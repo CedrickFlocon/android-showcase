@@ -2,7 +2,7 @@ package com.cedrickflocon.android.showcase.user.presentation
 
 import com.cedrickflocon.android.showcase.user.di.UserComponent
 import com.cedrickflocon.android.showcase.user.router.UserParams
-import com.cedrickflocon.showcase.core.presentation.ViewModelScope
+import com.cedrickflocon.android.showcase.core.presentation.ViewModelScope
 import dagger.BindsInstance
 import dagger.Component
 

@@ -2,7 +2,7 @@ package com.cedrickflocon.android.showcase.search.presentation.list
 
 import android.app.Activity
 import com.cedrickflocon.android.showcase.search.di.SearchComponent
-import com.cedrickflocon.showcase.core.presentation.ViewModelScope
+import com.cedrickflocon.android.showcase.core.presentation.ViewModelScope
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.CoroutineScope

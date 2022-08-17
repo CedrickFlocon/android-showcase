@@ -4,8 +4,8 @@ import com.cedrickflocon.android.showcase.search.data.SearchRepositoryImpl
 import com.cedrickflocon.android.showcase.search.domain.SearchRepository
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCaseImpl
-import com.cedrickflocon.showcase.core.di.DataComponent
-import com.cedrickflocon.showcase.core.di.FeatureScope
+import com.cedrickflocon.android.showcase.core.di.DataComponent
+import com.cedrickflocon.android.showcase.core.di.FeatureScope
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component

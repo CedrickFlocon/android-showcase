@@ -1,4 +1,4 @@
-package com.cedrickflocon.showcase.core.di
+package com.cedrickflocon.android.showcase.core.di
 
 import javax.inject.Scope
 
