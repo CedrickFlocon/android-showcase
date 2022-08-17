@@ -7,12 +7,12 @@ apply {
 
 include(
     ":app",
-    ":design",
 )
 
 include(
     ":core:data:graphql",
     ":core:di",
+    ":core:presentation:design",
 )
 
 include(

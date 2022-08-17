@@ -1,4 +1,4 @@
-package com.cedrickflocon.android.showcase.design
+package com.cedrickflocon.android.showcase.core.presentation.design
 
 import androidx.compose.ui.graphics.Color
 

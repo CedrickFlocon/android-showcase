@@ -7,7 +7,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
-import com.cedrickflocon.android.showcase.design.Theme
+import com.cedrickflocon.android.showcase.core.presentation.design.Theme
 import com.cedrickflocon.android.showcase.search.di.DaggerSearchComponent
 import com.cedrickflocon.android.showcase.search.di.SearchComponent
 import com.cedrickflocon.showcase.core.di.DataComponent

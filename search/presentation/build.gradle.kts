@@ -34,10 +34,11 @@ kapt {
 }
 
 dependencies {
-    implementation(project(":design"))
+    implementation(project(":core:di"))
+    implementation(project(":core:presentation:design"))
+
     implementation(project(":search:domain"))
     implementation(project(":search:di"))
-    implementation(project(":core:di"))
 
     implementation(project(":user:router"))
 
