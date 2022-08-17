@@ -27,14 +27,9 @@ android {
     }
 }
 
-kapt {
-    arguments {
-        arg("dagger.validateTransitiveComponentDependencies", "DISABLED")
-    }
-}
-
 dependencies {
     implementation(project(":core:di"))
+    implementation(project(":core:presentation"))
     implementation(project(":core:presentation:design"))
 
     implementation(project(":user:domain"))

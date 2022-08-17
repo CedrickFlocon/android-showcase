@@ -10,6 +10,10 @@ class SearchUseCaseImpl @Inject constructor(
     private val externalScope: CoroutineScope
 ) : SearchUseCase {
 
+    init {
+        println("Use Case $this")
+    }
+
     private val initialState = SearchUseCase.State(
         searchParams = SearchParams(query = ""),
         nextCursor = null,

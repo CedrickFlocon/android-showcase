@@ -5,14 +5,14 @@ import com.cedrickflocon.android.showcase.search.domain.SearchRepository
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
 import com.cedrickflocon.android.showcase.search.domain.SearchUseCaseImpl
 import com.cedrickflocon.showcase.core.di.DataComponent
+import com.cedrickflocon.showcase.core.di.FeatureScope
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import kotlinx.coroutines.CoroutineScope
-import javax.inject.Singleton
 
-@Singleton
+@FeatureScope
 @Component(
     dependencies = [DataComponent::class],
     modules = [SearchComponent.SearchModule::class]
@@ -33,6 +33,7 @@ interface SearchComponent {
     interface SearchModule {
 
         @Binds
+        @FeatureScope
         fun bindUseCase(useCase: SearchUseCaseImpl): SearchUseCase
 
         @Binds

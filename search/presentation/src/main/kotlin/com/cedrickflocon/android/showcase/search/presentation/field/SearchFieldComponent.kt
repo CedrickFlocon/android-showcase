@@ -1,12 +1,12 @@
 package com.cedrickflocon.android.showcase.search.presentation.field
 
 import com.cedrickflocon.android.showcase.search.di.SearchComponent
-import com.cedrickflocon.android.showcase.search.presentation.ViewModelScope
+import com.cedrickflocon.showcase.core.presentation.ViewModelScope
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.CoroutineScope
 
-@ViewModelScope
+@com.cedrickflocon.showcase.core.presentation.ViewModelScope
 @Component(dependencies = [SearchComponent::class])
 interface SearchFieldComponent {
 
