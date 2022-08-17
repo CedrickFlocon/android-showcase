@@ -35,12 +35,11 @@ dependencies {
     implementation(project(":core:di"))
     implementation(project(":core:presentation:design"))
 
-    implementation(project(":user:di"))
-    implementation(project(":search:di"))
     implementation(project(":user:router"))
 
     implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core)
     implementation(presentation.bundles.compose)
+    implementation(libs.arrow.core)
 }
