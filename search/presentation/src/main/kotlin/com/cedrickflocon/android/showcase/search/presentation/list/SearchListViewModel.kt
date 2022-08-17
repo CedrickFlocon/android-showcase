@@ -1,7 +1,7 @@
 package com.cedrickflocon.android.showcase.search.presentation.list
 
-import com.cedrickflocon.android.showcase.search.domain.SearchDataSource
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
+import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
 import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.cedrickflocon.android.showcase.user.router.UserRouter
 import kotlinx.coroutines.flow.*
@@ -11,7 +11,7 @@ import kotlin.random.Random
 import kotlin.random.nextInt
 
 class SearchListViewModel @Inject constructor(
-    private val dataSource: SearchDataSource,
+    private val useCase: SearchUseCase,
     private val mapper: UiStateMapper,
     private val router: UserRouter
 ) {
@@ -32,7 +32,7 @@ class SearchListViewModel @Inject constructor(
     private val events = MutableSharedFlow<Event>()
 
     val states = merge(
-        dataSource.data
+        useCase.data
             .map { state ->
                 val result = state.items
                     ?.let { mapper(it) { events.emit(Event.OnClickUser(it)) } }
@@ -41,7 +41,7 @@ class SearchListViewModel @Inject constructor(
                     .takeIf { state.loading }
 
                 initialState.copy(
-                    error = if (state.error) ({ dataSource.events.emit(SearchDataSource.Event.Retry) }) else null,
+                    error = if (state.error) ({ useCase.events.emit(SearchUseCase.Event.Retry) }) else null,
                     items = (result?.plus(loading ?: emptyList()) ?: loading)
                 )
             }
@@ -49,11 +49,11 @@ class SearchListViewModel @Inject constructor(
             .distinctUntilChanged(),
 
         events
-            .combine(dataSource.data) { event, data -> event to data }
+            .combine(useCase.data) { event, data -> event to data }
             .onEach { (event, data) ->
                 when (event) {
                     is Event.OnScroll -> if (event.index >= (data.items?.size?.minus(1) ?: Int.MAX_VALUE)) {
-                        dataSource.events.emit(SearchDataSource.Event.NextPage)
+                        useCase.events.emit(SearchUseCase.Event.NextPage)
                     }
                     is Event.OnClickUser -> router.navigateToUser(UserParams(event.searchResultItem.login))
                 }

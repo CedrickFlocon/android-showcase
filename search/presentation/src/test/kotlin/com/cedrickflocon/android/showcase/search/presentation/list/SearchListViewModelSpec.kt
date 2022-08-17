@@ -1,8 +1,8 @@
 package com.cedrickflocon.android.showcase.search.presentation.list
 
 import app.cash.turbine.testIn
-import com.cedrickflocon.android.showcase.search.domain.SearchDataSource
 import com.cedrickflocon.android.showcase.search.domain.SearchResultItem
+import com.cedrickflocon.android.showcase.search.domain.SearchUseCase
 import com.cedrickflocon.android.showcase.user.router.UserParams
 import com.cedrickflocon.android.showcase.user.router.UserRouter
 import com.google.common.truth.Truth.assertThat
@@ -17,8 +17,8 @@ class SearchListViewModelSpec : DescribeSpec({
     isolationMode = IsolationMode.InstancePerLeaf
     coroutineTestScope = true
 
-    val dataSourceState = MutableSharedFlow<SearchDataSource.State>()
-    val dataSource = mockk<SearchDataSource>(relaxed = true) {
+    val dataSourceState = MutableSharedFlow<SearchUseCase.State>()
+    val dataSource = mockk<SearchUseCase>(relaxed = true) {
         every { data } returns dataSourceState
     }
     val mapper = mockk<UiStateMapper>()
@@ -44,7 +44,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
     describe("subscription") {
         val subscription = viewModel.states.testIn(CoroutineScope(UnconfinedTestDispatcher()))
-        val initialDataSourceState = SearchDataSource.State(
+        val initialDataSourceState = SearchUseCase.State(
             searchParams = mockk(),
             nextCursor = null,
             error = false,
@@ -94,7 +94,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
                 assertThat(errorState.error).isNotNull()
                 errorState.error!!.invoke()
-                coVerify { dataSource.events.emit(SearchDataSource.Event.Retry) }
+                coVerify { dataSource.events.emit(SearchUseCase.Event.Retry) }
             }
         }
 
@@ -159,7 +159,7 @@ class SearchListViewModelSpec : DescribeSpec({
                 subscription.expectMostRecentItem().onScroll(2)
 
                 it("should call the datasource") {
-                    coVerify { dataSource.events.emit(SearchDataSource.Event.NextPage) }
+                    coVerify { dataSource.events.emit(SearchUseCase.Event.NextPage) }
                 }
             }
 
@@ -194,7 +194,7 @@ class SearchListViewModelSpec : DescribeSpec({
                     assertThat(success.items).isEqualTo(items)
                     assertThat(success.error).isNotNull()
                     success.error!!.invoke()
-                    coVerify { dataSource.events.emit(SearchDataSource.Event.Retry) }
+                    coVerify { dataSource.events.emit(SearchUseCase.Event.Retry) }
 
                     lambda.captured.invoke(mockk { every { login } returns "bobby" })
                     verify { router.navigateToUser(UserParams("bobby")) }
