@@ -34,10 +34,11 @@ kapt {
 }
 
 dependencies {
-    implementation(project(":design"))
+    implementation(project(":core:di"))
+    implementation(project(":core:presentation:design"))
+
     implementation(project(":user:domain"))
     implementation(project(":user:di"))
-    implementation(project(":core:di"))
     implementation(project(":user:router"))
 
     implementation(libs.kotlin.stdlib)

@@ -33,11 +33,10 @@ android {
 }
 dependencies {
     implementation(project(":core:di"))
+    implementation(project(":core:presentation:design"))
+
     implementation(project(":user:di"))
     implementation(project(":search:di"))
-
-    implementation(project(":design"))
-
     implementation(project(":user:router"))
 
     implementation(libs.kotlin.stdlib)

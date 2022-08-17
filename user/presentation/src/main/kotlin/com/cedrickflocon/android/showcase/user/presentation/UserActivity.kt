@@ -8,7 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.cedrickflocon.android.showcase.design.Theme
+import com.cedrickflocon.android.showcase.core.presentation.design.Theme
 import com.cedrickflocon.android.showcase.user.di.DaggerUserComponent
 import com.cedrickflocon.android.showcase.user.di.UserComponent
 import com.cedrickflocon.android.showcase.user.router.UserRouter
