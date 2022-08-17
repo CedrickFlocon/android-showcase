@@ -1,8 +1,8 @@
 package com.cedrickflocon.android.showcase.app
 
 import com.cedrickflocon.android.showcase.BuildConfig
-import com.cedrickflocon.showcase.core.di.DaggerDataComponent
-import com.cedrickflocon.showcase.core.di.DataComponent
+import com.cedrickflocon.android.showcase.core.di.DaggerDataComponent
+import com.cedrickflocon.android.showcase.core.di.DataComponent
 
 class Graph {
 

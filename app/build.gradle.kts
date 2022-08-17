@@ -33,6 +33,7 @@ android {
 }
 dependencies {
     implementation(project(":core:di"))
+    implementation(project(":core:presentation"))
     implementation(project(":core:presentation:design"))
 
     implementation(project(":user:di"))
@@ -43,4 +44,5 @@ dependencies {
 
     implementation(libs.androidx.core)
     implementation(presentation.bundles.compose)
+    implementation(libs.arrow.core)
 }

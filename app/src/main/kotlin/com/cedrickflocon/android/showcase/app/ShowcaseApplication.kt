@@ -1,7 +1,7 @@
 package com.cedrickflocon.android.showcase.app
 
 import android.app.Application
-import com.cedrickflocon.showcase.core.di.DataComponent
+import com.cedrickflocon.android.showcase.core.di.DataComponent
 
 class ShowcaseApplication :
     Application(),

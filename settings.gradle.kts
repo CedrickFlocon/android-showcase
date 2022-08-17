@@ -12,6 +12,7 @@ include(
 include(
     ":core:data:graphql",
     ":core:di",
+    ":core:presentation",
     ":core:presentation:design",
 )
 
