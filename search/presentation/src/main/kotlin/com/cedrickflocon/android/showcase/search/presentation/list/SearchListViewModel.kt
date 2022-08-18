@@ -32,7 +32,7 @@ class SearchListViewModel @Inject constructor(
     private val events = MutableSharedFlow<Event>()
 
     val states = merge(
-        useCase.data
+        useCase.search
             .map { state ->
                 val result = state.items
                     ?.let { mapper(it) { events.emit(Event.OnClickUser(it)) } }
@@ -49,7 +49,7 @@ class SearchListViewModel @Inject constructor(
             .distinctUntilChanged(),
 
         events
-            .combine(useCase.data) { event, data -> event to data }
+            .combine(useCase.search) { event, data -> event to data }
             .onEach { (event, data) ->
                 when (event) {
                     is Event.OnScroll -> if (event.index >= (data.items?.size?.minus(1) ?: Int.MAX_VALUE)) {

@@ -10,8 +10,8 @@ class SearchUseCaseImpl @Inject constructor(
     private val externalScope: CoroutineScope
 ) : SearchUseCase {
 
-    private val initialState = SearchUseCase.State(
-        searchParams = SearchParams(query = ""),
+    private val initialState = State(
+        searchParams = null,
         nextCursor = null,
         error = false,
         loading = false,
@@ -21,7 +21,7 @@ class SearchUseCaseImpl @Inject constructor(
     override val events = MutableSharedFlow<SearchUseCase.Event>()
     private val state = MutableStateFlow(initialState)
 
-    override val data = events
+    override val search = events
         .filter { it.isValid(state.value) }
         .flatMapLatest {
             flow {
@@ -35,17 +35,17 @@ class SearchUseCaseImpl @Inject constructor(
                         )
                     }
                     SearchUseCase.Event.Retry -> {
-                        val newState = state.value.onLoading(state.value.searchParams)
+                        val newState = state.value.onLoading(state.value.searchParams!!)
                         emit(newState)
-                        search(newState.searchParams, newState.nextCursor).fold(
+                        search(newState.searchParams!!, newState.nextCursor).fold(
                             { emit(newState.onError()) },
                             { emit(newState.onSuccess(it)) }
                         )
                     }
                     SearchUseCase.Event.NextPage -> {
-                        val newState = state.value.onLoading(state.value.searchParams)
+                        val newState = state.value.onLoading(state.value.searchParams!!)
                         emit(newState)
-                        search(newState.searchParams, newState.nextCursor).fold(
+                        search(newState.searchParams!!, newState.nextCursor).fold(
                             { emit(newState.onError()) },
                             { emit(newState.onSuccess(it)) }
                         )
@@ -54,29 +54,37 @@ class SearchUseCaseImpl @Inject constructor(
             }
         }
         .onEach { state.emit(it) }
-        .onStart { emit(initialState) }
+        .map {
+            SearchUseCase.State(
+                searchParams = it.searchParams!!,
+                hasNext = it.nextCursor != null,
+                error = it.error,
+                loading = it.loading,
+                items = it.items
+            )
+        }
         .distinctUntilChanged()
         .shareIn(externalScope, SharingStarted.Eagerly, 1)
 
-    private fun SearchUseCase.State.onLoading(newSearchParams: SearchParams) = this.copy(
+    private fun State.onLoading(newSearchParams: SearchParams) = this.copy(
         searchParams = newSearchParams,
         loading = true,
         error = false
     )
 
-    private fun SearchUseCase.State.onError() = this.copy(
+    private fun State.onError() = this.copy(
         error = true,
         loading = false
     )
 
-    private fun SearchUseCase.State.onSuccess(searchResult: SearchResult) = this.copy(
+    private fun State.onSuccess(searchResult: SearchResult) = this.copy(
         error = false,
         loading = false,
         items = (this.items ?: emptyList()) + searchResult.searchResultItem,
         nextCursor = searchResult.pageInfo.nextCursor
     )
 
-    private fun SearchUseCase.Event.isValid(state: SearchUseCase.State): Boolean {
+    private fun SearchUseCase.Event.isValid(state: State): Boolean {
         return when (this) {
             is SearchUseCase.Event.NewSearch -> true
             SearchUseCase.Event.NextPage -> state.nextCursor != null && !state.loading && !state.error
@@ -87,5 +95,13 @@ class SearchUseCaseImpl @Inject constructor(
     private suspend fun search(searchParams: SearchParams, cursor: String?): Either<SearchError, SearchResult> {
         return repository.search(searchParams, cursor)
     }
+
+    private data class State(
+        val searchParams: SearchParams?,
+        val nextCursor: String?,
+        val error: Boolean,
+        val loading: Boolean,
+        val items: List<SearchResultItem>?,
+    )
 
 }

@@ -19,7 +19,7 @@ class SearchListViewModelSpec : DescribeSpec({
 
     val dataSourceState = MutableSharedFlow<SearchUseCase.State>()
     val dataSource = mockk<SearchUseCase>(relaxed = true) {
-        every { data } returns dataSourceState
+        every { search } returns dataSourceState
     }
     val mapper = mockk<UiStateMapper>()
     val router = mockk<UserRouter>(relaxUnitFun = true)
@@ -46,7 +46,7 @@ class SearchListViewModelSpec : DescribeSpec({
         val subscription = viewModel.states.testIn(CoroutineScope(UnconfinedTestDispatcher()))
         val initialDataSourceState = SearchUseCase.State(
             searchParams = mockk(),
-            nextCursor = null,
+            hasNext = false,
             error = false,
             loading = false,
             items = null
