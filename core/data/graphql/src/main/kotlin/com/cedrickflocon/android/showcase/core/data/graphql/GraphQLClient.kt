@@ -13,10 +13,6 @@ class GraphQLClient @Inject constructor(
     private val bearer: String
 ) {
 
-    init {
-         println("GQL $this")
-    }
-
     val client = ApolloClient.Builder()
         .serverUrl("https://api.github.com/graphql")
         .addHttpInterceptor(LoggingInterceptor())

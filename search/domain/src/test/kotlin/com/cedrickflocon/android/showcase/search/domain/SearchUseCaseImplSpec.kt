@@ -19,31 +19,27 @@ class SearchUseCaseImplSpec : DescribeSpec({
 
     describe("data source") {
         val repository = mockk<SearchRepository>()
-        val dataSource = SearchUseCaseImpl(repository ,CoroutineScope(UnconfinedTestDispatcher()))
+        val dataSource = SearchUseCaseImpl(repository, CoroutineScope(UnconfinedTestDispatcher()))
 
         describe("subscription") {
-            val subscription = dataSource.data.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+            val subscription = dataSource.search.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+
+            val initialState = SearchUseCase.State(
+                searchParams = mockk(),
+                hasNext = false,
+                loading = false,
+                error = false,
+                items = null,
+            )
+
             afterTest {
                 assertThat(subscription.cancelAndConsumeRemainingEvents())
                     .isEmpty()
             }
 
-            it("should have a first item") {
-                assertThat(subscription.awaitItem())
-                    .isEqualTo(
-                        SearchUseCase.State(
-                            searchParams = SearchParams(query = ""),
-                            nextCursor = null,
-                            error = false,
-                            loading = false,
-                            items = null
-                        )
-                    )
-            }
-
             describe("second subscription") {
                 val searchParams = mockk<SearchParams>()
-                val secondSubscription = dataSource.data.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+                val secondSubscription = dataSource.search.testIn(CoroutineScope(UnconfinedTestDispatcher()))
                 coEvery { repository.search(searchParams, null) } coAnswers { mockk<SearchResult>(relaxed = true).right() }
                 afterTest {
                     assertThat(secondSubscription.cancelAndConsumeRemainingEvents())
@@ -53,7 +49,6 @@ class SearchUseCaseImplSpec : DescribeSpec({
                 it("should share result") {
                     dataSource.events.emit(SearchUseCase.Event.NewSearch(searchParams))
 
-                    assertThat(subscription.awaitItem()).isEqualTo(secondSubscription.awaitItem())
                     assertThat(subscription.awaitItem()).isEqualTo(secondSubscription.awaitItem())
                     assertThat(subscription.awaitItem()).isEqualTo(secondSubscription.awaitItem())
 
@@ -81,8 +76,6 @@ class SearchUseCaseImplSpec : DescribeSpec({
                 } returns secondSearchResult.right()
 
                 it("should cancel previous search") {
-                    val initialState = subscription.awaitItem()
-
                     dataSource.events.emit(SearchUseCase.Event.NewSearch(firstSearchParams))
                     assertThat(subscription.awaitItem()).isEqualTo(
                         initialState.copy(
@@ -103,7 +96,7 @@ class SearchUseCaseImplSpec : DescribeSpec({
                     assertThat(result).isEqualTo(
                         initialState.copy(
                             searchParams = secondSearchParams,
-                            nextCursor = "firstCursor",
+                            hasNext = true,
                             items = secondSearchItem,
                         )
                     )
@@ -119,17 +112,6 @@ class SearchUseCaseImplSpec : DescribeSpec({
                         dataSource.events.emit(it)
 
                         it("should do nothing") {
-                            assertThat(subscription.awaitItem())
-                                .isEqualTo(
-                                    SearchUseCase.State(
-                                        searchParams = SearchParams(query = ""),
-                                        nextCursor = null,
-                                        error = false,
-                                        loading = false,
-                                        items = null
-                                    )
-                                )
-
                             coVerify { repository wasNot Called }
                         }
                     }
@@ -147,8 +129,6 @@ class SearchUseCaseImplSpec : DescribeSpec({
                 dataSource.events.emit(SearchUseCase.Event.NewSearch(searchParams))
 
                 it("should have a loading state & result") {
-                    val initialState = subscription.awaitItem()
-
                     assertThat(subscription.awaitItem()).isEqualTo(
                         initialState.copy(
                             searchParams = searchParams,
@@ -160,7 +140,7 @@ class SearchUseCaseImplSpec : DescribeSpec({
                     assertThat(result).isEqualTo(
                         initialState.copy(
                             searchParams = searchParams,
-                            nextCursor = "firstCursor",
+                            hasNext = true,
                             items = firstPageItem,
                         )
                     )
@@ -176,7 +156,7 @@ class SearchUseCaseImplSpec : DescribeSpec({
                     dataSource.events.emit(SearchUseCase.Event.NextPage)
 
                     it("should have loading & new items state") {
-                        subscription.skipItems(2)
+                        subscription.skipItems(1)
                         val successState = subscription.awaitItem()
                         assertThat(successState.items).isEqualTo(firstPageItem)
 
@@ -191,7 +171,7 @@ class SearchUseCaseImplSpec : DescribeSpec({
                         assertThat(result).isEqualTo(
                             successState.copy(
                                 items = firstPageItem + secondPageITem,
-                                nextCursor = null
+                                hasNext = false
                             )
                         )
                     }
@@ -200,14 +180,14 @@ class SearchUseCaseImplSpec : DescribeSpec({
                         dataSource.events.emit(SearchUseCase.Event.NextPage)
 
                         it("should not produce state") {
-                            subscription.skipItems(5)
+                            subscription.skipItems(4)
                             coVerify(exactly = 2) { repository.search(any(), any()) }
                         }
                     }
                 }
 
                 describe("second subscription") {
-                    val secondSubscription = dataSource.data.testIn(CoroutineScope(UnconfinedTestDispatcher()))
+                    val secondSubscription = dataSource.search.testIn(CoroutineScope(UnconfinedTestDispatcher()))
                     afterTest {
                         assertThat(secondSubscription.cancelAndConsumeRemainingEvents())
                             .isEmpty()
@@ -225,8 +205,6 @@ class SearchUseCaseImplSpec : DescribeSpec({
                 dataSource.events.emit(SearchUseCase.Event.NewSearch(searchParams))
 
                 it("should have an error") {
-                    val initialState = subscription.awaitItem()
-
                     assertThat(subscription.awaitItem()).isEqualTo(
                         initialState.copy(
                             searchParams = searchParams,
@@ -252,7 +230,6 @@ class SearchUseCaseImplSpec : DescribeSpec({
                     dataSource.events.emit(SearchUseCase.Event.Retry)
 
                     it("should retry a search") {
-                        val initialState = subscription.awaitItem()
                         subscription.skipItems(2)
 
                         assertThat(subscription.awaitItem()).isEqualTo(
@@ -265,7 +242,7 @@ class SearchUseCaseImplSpec : DescribeSpec({
                         assertThat(subscription.awaitItem()).isEqualTo(
                             initialState.copy(
                                 searchParams = searchParams,
-                                nextCursor = "firstCursor",
+                                hasNext = true,
                                 items = searchItem
                             )
                         )

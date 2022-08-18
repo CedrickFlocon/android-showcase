@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 interface SearchUseCase {
 
     val events: MutableSharedFlow<Event>
-    val data: Flow<State>
+    val search: Flow<State>
 
     sealed interface Event {
         object Retry : Event
@@ -16,7 +16,7 @@ interface SearchUseCase {
 
     data class State(
         val searchParams: SearchParams,
-        val nextCursor: String?,
+        val hasNext: Boolean,
         val error: Boolean,
         val loading: Boolean,
         val items: List<SearchResultItem>?,
